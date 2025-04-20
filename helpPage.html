@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Tab</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Main container for the help page content -->
+<div id="storyHelp-container">
+    <!-- Title of the story -->
+    <h1 id="helpPage-title">Help Page</h1>
+    <!-- Paragraph describing the story introduction -->
+    <p id="helpText">Need Help? These are five commonly asked questions that you may have.
+        Click on each question to reveal the answer.</p>
+    <div id="faq-section">
+        <!-- FAQ questions will be added here and displayed -->
+    </div>
+    <section id="chatbot">
+        <h3>Chat with AI</h3>
+        <div id="chat-window">
+          <div id="messages"></div>
+        </div>
+        <div class="inputTextContainer">
+            <input type="text" id="user-input" placeholder="Ask a question..." />
+            <button id="send-btn">Send</button>
+        </div>
+    </section>
+    <!-- Container for interactive choices, such as buttons -->
+    <div id="choices">
+        <!-- Button that triggers a choose function when clicked -->
+        <button id = "helpReturn" onclick="choose('returnFromHelp')">Back to Story</button>
+    </div>
+</div>
+
+<!-- JavaScript to generate FAQ section dynamically -->
+<script>
+
+    // Define questions and answers
+    const questions = [
+        "What is the goal of this program?",
+        "How does this program work?",
+        "What do the energy points do?",
+        "What makes this game engaging to the user?",
+        "What platform and programming language is this website made on?"
+    ];
+    const answers = [
+        "The goal of this program is to escape a stranded island with the resources you find.",
+        "This program works by changing the story based on user input as they click various buttons",
+        "The energy points symbolize how active you are. During activities, energy points decrease.",
+        "From graphics to sounds this program is very entertaining. Energy points also play a massive role to engage user.",
+        "This website is built on WebStorm using Html, Css, and Javascript to make this user interactive game."
+    ];
+
+    // Generate the FAQ section
+    const faqSection = document.getElementById('faq-section');
+    questions.forEach((question, index) => {
+        // Create a button for each question
+        const questionButton = document.createElement('button');
+        questionButton.textContent = question;
+        questionButton.className = 'faq-question';
+        questionButton.onclick = () => {
+            // Toggle answer display on button click
+            const answerDiv = document.getElementById(`answer-${index}`);
+            answerDiv.style.display = answerDiv.style.display === 'none' ? 'block' : 'none';
+        };
+        // Create a div for the answer, initially hidden
+        const answerDiv = document.createElement('div');
+        answerDiv.id = `answer-${index}`;
+        answerDiv.className = 'faq-answer';
+        answerDiv.style.display = 'none';
+        answerDiv.textContent = answers[index];
+        // Add the question and answer to the FAQ section
+        faqSection.appendChild(questionButton);
+        faqSection.appendChild(answerDiv);
+    });
+</script>
+<script src="script.js"></script>
+<script src="aichatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif; /* Sets the primary font for the page */
+    background-color: #e0f7fa; /* Light blue background for the entire page */
+    color: #333; /* Dark gray text color */
+    padding: 20px; /* Adds padding around the body */
+}
+
+/* Container for the story content */
+#story-container {
+    background-color: white; /* White background for contrast */
+    border-radius: 8px; /* Rounded corners for a soft look */
+    padding: 20px; /* Adds padding inside the container */
+    max-width: 600px; /* Limits width for better readability */
+    margin: 0 auto; /* Centers the container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+    animation: fadeIn 1.5s ease-in-out; /* Fades in the container */
+}
+
+/* Styling for the story title */
+#story-title {
+    font-size: 2.6em; /* Large font size for emphasis */
+    font-weight: bold; /* Makes text bold */
+    text-align: center; /* Centers the title */
+    color: #e67e22; /* Orange color for visibility */
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+    margin: 10px 0; /* Spacing around the title */
+    font-family: 'Arial', sans-serif; /* Sets specific font */
+    letter-spacing: 1px; /* Adds spacing between letters */
+}
+
+/* Main text styling within the story container */
+#story-text {
+    font-size: 1.1em; /* Slightly larger font for readability */
+    text-align: center; /* Centers the text */
+    color: black; /* Black color for text */
+    font-family: 'Georgia', serif; /* Different font for a formal look */
+    line-height: 1.5; /* Spacing between lines */
+    margin: 15px 20px; /* Adds margin around the text */
+    max-width: 600px; /* Limits width for readability */
+    opacity: 0.85; /* Slightly faded for aesthetic effect */
+}
+
+/* Warning text styling */
+#beware {
+    font-size: 1em; /* Regular font size */
+    text-align: center; /* Centers the warning text */
+    color: #B22222; /* Red color for emphasis */
+    font-weight: bold; /* Makes text bold */
+    font-family: 'Verdana', sans-serif; /* Different font for distinct styling */
+    letter-spacing: 1px; /* Spacing between letters */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Adds shadow */
+    margin-top: 10px; /* Spacing above the text */
+    opacity: 0.9; /* Slightly transparent */
+}
+
+/* Image styling */
+img {
+    max-width: 100%; /* Ensures image is responsive */
+    border-radius: 8px; /* Rounds the corners */
+    display: block; /* Centers the image in container */
+    width: 70%; /* Limits width */
+    margin: 20px auto; /* Centers and adds margin */
+    border: 3px solid #f39c12; /* Orange border for emphasis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Adds shadow for depth */
+    animation: zoomIn 1s ease-in-out; /* Zooms in image */
+}
+
+/* Styling for credentials text */
+#credentials {
+    font-size: 0.9em; /* Small font size */
+    color: black; /* Black color */
+    font-style: italic; /* Italicizes text */
+    line-height: 1.6; /* Adds line height */
+    text-align: center; /* Centers the text */    
+    margin-bottom: 15px; /* Adds bottom margin */
+}
+
+/* Button styling */
+button {
+    border: none; /* Removes border */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+    background-color: #f39c12; /* Orange background color */
+    color: #2c3e50; /* Dark blue text color */
+    padding: 15px 30px; /* Adds padding inside the button */
+    font-size: 1.1em; /* Increases font size */
+    font-weight: bold; /* Makes text bold */
+    border-radius: 8px; /* Rounds the corners */
+    transition: background-color 0.3s, transform 0.3s; /* Adds transition for hover effect */
+    margin-top: 1px; /* Minimal margin at top */
+}
+
+/* Container for choice buttons */
+#choices {
+    display: flex; /* Aligns items in a row */
+    justify-content: center; /* Centers content */
+    align-items: center; /* Vertically centers content */
+}
+
+/* Hover effect for choice buttons */
+#choices button:hover {
+    background-color: #e67e22; /* Changes background color on hover */
+    transform: scale(1.1); /* Enlarges button on hover */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Pop-up animation */
+@keyframes popUp {
+    0% { transform: translateY(-20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Zoom-in animation */
+@keyframes zoomIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Styling for list of names */
+#names_list {
+    list-style-type: none; /* Removes default bullet points */
+    text-align: left; /* Aligns text to the left */
+    margin: 10px; /* Adds margin around list */
+    padding: 0; /* Removes padding */
+    font-family: Arial, sans-serif; /* Sets font */
+    font-size: 0.9em; /* Smaller font size */
+    color: #34495e; /* Dark blue color */
+}
+
+/* Individual name list items */
+#names_list li {
+    padding: 5px; /* Adds padding inside items */
+    background-color: #f0f8ff; /* Light blue background */
+    border-left: 3px solid #3498db; /* Blue border on the left */
+    margin-bottom: 8px; /* Space between items */
+    border-radius: 4px; /* Rounds the corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds shadow */
+    transition: transform 0.2s; /* Transition for hover effect */
+}
+
+/* Hover effect for name list items */
+#names_list li:hover {
+    transform: scale(1.01); /* Slightly enlarges on hover */
+    background-color: #eaf6ff; /* Changes background color */
+}
+
+/* Zoom-in animation class */
+.pop-up {
+    animation: zoomIn 1s ease-in-out; /* Applies zoom-in animation */
+}
+
+/* Styling for list of shelter types */
+#types_of_shelters {
+    list-style-type: none; /* Removes default bullet points */
+    text-align: left; /* Aligns text to the left */
+    margin: 10px; /* Adds margin around list */
+    padding: 0; /* Removes padding */
+    font-family: Arial, sans-serif; /* Sets font */
+    font-size: 0.9em; /* Smaller font size */
+    color: #34495e; /* Dark blue color */
+}
+
+/* Individual shelter type list items */
+#types_of_shelters li {
+    padding: 5px; /* Adds padding inside items */
+    background-color: #f0f8ff; /* Light blue background */
+    border-left: 3px solid #3498db; /* Blue border on the left */
+    margin-bottom: 8px; /* Space between items */
+    border-radius: 4px; /* Rounds the corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds shadow */
+    transition: transform 0.2s; /* Transition for hover effect */
+}
+
+/* Hover effect for shelter type list items */
+#types_of_shelters li:hover {
+    transform: scale(1.01); /* Slightly enlarges on hover */
+    background-color: #eaf6ff; /* Changes background color */
+}
+
+/* Styling for instruction list container */
+#instruction_list {
+    list-style-type: none; /* Removes bullet points */
+    margin: 10px; /* Adds margin around list */
+    padding: 0; /* Removes padding */
+    font-family: Arial, sans-serif; /* Sets font */
+    font-size: 0.9em; /* Smaller font size */
+    color: #34495e; /* Dark blue color */
+    display: flex; /* Flex layout */
+    flex-wrap: wrap; /* Allows items to wrap to next row */
+    gap: 10px; /* Adds space between items */
+    justify-content: flex-start; /* Aligns items to the left */
+}
+
+/* Individual instruction list items */
+#instruction_list li {
+    padding: 10px 15px; /* Adds padding */
+    background-color: #f9fdfb; /* Light green background */
+    border-left: 4px solid #4CAF50; /* Green border for standard items */
+    border-radius: 4px; /* Rounds the corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds shadow */
+    transition: transform 0.2s, background-color 0.2s; /* Adds transition for hover */
+    width: auto; /* Sets automatic width */
+    text-align: left; /* Aligns text to the left */
+}
+
+/* Hover effect for instruction list items */
+#instruction_list li:hover {
+    transform: scale(1.02); /* Slightly enlarges on hover */
+    background-color: #e8f5e9; /* Changes background color */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
+/* Styling for the special note in instruction list */
+#instruction_list li:last-child {
+    font-weight: bold; /* Makes text bold */
+    color: #e53935; /* Red text color */
+    background-color: #fff5f5; /* Light red background */
+    border-left: 4px solid #e53935; /* Red border */
+    padding: 12px 15px; /* Adds padding */
+    width: 100%; /* Spans full width */
+    text-align: left; /* Aligns text to the left */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds shadow */
+}
+
+/*#storyHelp-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    color: #333;
+}*/
+
+#storyHelp-container {
+    background-color: white; /* White background for contrast */
+    border-radius: 8px; /* Rounded corners for a soft look */
+    padding: 20px; /* Adds padding inside the container */
+    max-width: 800px; /* Limits width for better readability */
+    margin: 0 auto; /* Centers the container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+    animation: fadeIn 1.5s ease-in-out; /* Fades in the container */
+}
+
+
+/* Help Page Title */
+#helpPage-title {
+    font-size: 2.6em; /* Large font size for emphasis */
+    font-weight: bold; /* Makes text bold */
+    text-align: center; /* Centers the title */
+    color: #e67e22; /* Orange color for visibility */
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+    margin: 10px 0; /* Spacing around the title */
+    font-family: 'Arial', sans-serif; /* Sets specific font */
+    letter-spacing: 1px; /* Adds spacing between letters */
+}
+
+/* Help Text */
+#helpText {
+    text-align: center;
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* FAQ Section */
+#faq-section {
+    margin-top: 20px;
+}
+
+/* FAQ Question Button */
+.faq-question {
+    display: block;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    border: none;
+    text-align: left;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.faq-question:hover {
+    background-color: #0056b3;
+}
+
+/* FAQ Answer */
+.faq-answer {
+    padding: 15px;
+    background-color: #e9ecef;
+    border-left: 4px solid #007bff;
+    margin-top: 5px;
+    border-radius: 5px;
+    display: none; /* Hidden by default */
+    font-size: 1em;
+    color: #333;
+    text-align: center;
+}
+
+/* "Return" Button */
+#choices {
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+#chatbot {
+    background: linear-gradient(135deg, #f3f4f6, #ffffff);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    /*font-family: 'Arial', sans-serif;*/
+}
+
+#chat-window {
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px;
+    height: 250px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    background: #f9fafb;
+}
+
+#messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.user-message {
+    align-self: flex-end;
+    text-align: right;
+    color: #1d4ed8;
+    background: #e0f2fe;
+    border: 1px solid #bae6fd;
+}
+
+.bot-message {
+    align-self: flex-start;
+    text-align: left;
+    color: #047857;
+    background: #d1fae5;
+    border: 1px solid #bbf7d0;
+}
+
+.inputTextContainer {
+    display: flex; /* Flexbox ensures both elements are on the same line */
+    align-items: center; /* Vertically aligns the elements */
+    gap: 10px; /* Space between the text box and the button */
+}
+
+#user-input {
+    flex: 1; /* Allows the text box to take up the remaining space */
+    /*width: calc(100% - 80px);*/
+    padding: 10px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+#send-btn {
+    padding: 10px 20px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#send-btn:hover {
+    background: #45a049;
+}
+
+#send-btn:active {
+    background: #3e8e41;
+}
+
+.report-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    max-width: 600px;
+    width: 100%;
+    margin: 15px;
+}
+
+h1 {
+    font-size: 24px;
+    color: #0984e3;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+ul.report-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul.report-list li {
+    background: #dfe6e9;
+    margin-bottom: 5px; /* Reduced space between each box */
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    transition: transform 0.3s, background-color 0.3s;
+    cursor: pointer;
+}
+
+ul.report-list li:hover {
+    background-color: #74b9ff;
+    color: #ffffff;
+    transform: scale(1.02);
+}
+
+pre {
+    font-size: 14px;
+    color: #2c3e50;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+footer {
+    text-align: center;
+    font-size: 11px;
+    color: #636e72;
+    margin-top: 13px;
+}
+
+footer a {
+    color: #0984e3;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+
