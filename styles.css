@@ -180,12 +180,13 @@ input:checked + .toggle-slider:before {
     font-family: 'Nunito', Verdana, sans-serif; /* Modern font */
     letter-spacing: 0.5px; /* Spacing between letters */
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Adds shadow */
-    margin: 15px auto; /* Center horizontally with auto margins */
+    margin-top: 15px; /* Spacing above the text */
     padding: 10px 15px; /* Padding for warning text */
     background-color: rgba(178, 34, 34, 0.1); /* Slight background */
     border-radius: 8px; /* Rounded corners */
-    display: block; /* Change to block for proper centering */
-    width: fit-content; /* Only as wide as needed */
+    display: inline-block; /* Only as wide as content */
+    margin-left: auto; /* Center the element */
+    margin-right: auto; /* Center the element */
     transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transition for dark mode */
 }
 
@@ -590,21 +591,19 @@ footer a:hover {
 .floating-controls {
     position: fixed;
     display: flex;
-    flex-direction: column;
-    gap: 12px; 
-    top: 100px;
-    right: 30px; 
-    z-index: 1001;
-    align-items: flex-end;
+    flex-direction: row;
+    gap: 10px;
+    top: 90px;
+    right: 20px;
+    z-index: 100;
 }
 
-
 .floating-control {
-    width: 60px; 
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: var(--container-bg);
-    box-shadow: 0 6px 12px var(--shadow-color);
+    box-shadow: 0 4px 10px var(--shadow-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -615,8 +614,8 @@ footer a:hover {
 }
 
 .floating-control img {
-    width: 65%; 
-    height: 65%;
+    width: 60%;
+    height: 60%;
     object-fit: contain;
     border: none;
     box-shadow: none;
@@ -625,27 +624,23 @@ footer a:hover {
 }
 
 .floating-control:hover {
-    transform: scale(1.1); 
-    box-shadow: 0 8px 20px var(--shadow-color);
-    background-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px var(--shadow-color);
+    background-color: var(--item-bg);
 }
 
-.floating-control:hover img {
-    filter: brightness(0) invert(1);
-}
-
-/* Energy display */        /* Ishaan fix the energy button */
+/* Energy display */
 #energy-display {
     position: fixed;
-    top: 300px; 
-    right: 10px; 
+    top: 80px;
+    right: 20px;
     display: flex;
     align-items: center;
     background: var(--container-bg);
     padding: 8px 15px;
     border-radius: 50px;
     box-shadow: 0 4px 10px var(--shadow-color);
-    z-index: 200;
+    z-index: 100;
     transition: background-color 0.3s ease;
 }
 
@@ -712,9 +707,8 @@ footer a:hover {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    margin: 20px auto 60px;
+    margin: 20px auto;
     gap: 20px;
-    position: relative;
 }
 
 .location {
@@ -723,7 +717,6 @@ footer a:hover {
     align-items: center;
     width: 150px;
     transition: all 0.3s ease;
-    margin-bottom: 30px;
 }
 
 .location img {
