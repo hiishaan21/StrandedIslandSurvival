@@ -7,30 +7,36 @@ const survivalImage = document.getElementById('survival-image');
 const credentials = document.getElementById('credentials');
 const choices = document.getElementById('choices');
 
-// Element to display the player's energy points
-const energyPointsElement = createEnergyPoints();
-const energyImage = createEnergyImage();
+// Progress indicator
+const progressIndicator = document.getElementById('progress-indicator');
 
-// Creating differnt buttons
-const stopButton = creatingStopButton();
-const microPhoneButton = creatingMicrophoneButton();
-const helpButton = creatingHelpButton();
-const exportButton = creatingExportButton();
+// Game state elements
+const energyDisplay = document.getElementById('energy-display');
+const energyValue = document.getElementById('energy-value');
+const energyIcon = document.getElementById('energy-icon');
 
-// Images for various game locations
-const skullRockImage = creatingSkullRockImage();
-const ghostLightCaveImage = creatingGhostLightCaveImage();
-const forgottenFallsImage = creatingForgottenFalls();
+// Floating control buttons
+const helpButton = document.getElementById('help-button');
+const restartButton = document.getElementById('restart-button');
+const voiceButton = document.getElementById('voice-button');
+const exportButton = document.getElementById('export-button');
 
-// Buttons to navigate to different locations in the game
-const skullRockButton = creatingSkullRockButton();
-const caveButton = creatingCaveButton();
-const fallsButton = creatingFallsButton();
+// Modern notification system
+const toastNotification = document.getElementById('notification-toast');
 
-// Messages that are displayed for different events in the game
-const shelterMessage = createShelterMessage();
-const failureMessage = createFailureMessage();
-const successMessage = creatingSuccessMessage();
+// Game messages
+const shelterMessage = document.getElementById('shelter-message');
+const successMessage = document.getElementById('success-message');
+const failureMessage = document.getElementById('failure-message');
+
+// Location images and buttons
+const locationContainer = document.getElementById('location-images');
+const skullRockImage = document.getElementById('skull-rock-image');
+const ghostLightCaveImage = document.getElementById('ghost-light-cave-image');
+const forgottenFallsImage = document.getElementById('forgotten-falls-image');
+const skullRockButton = document.getElementById('skull-rock-button');
+const caveButton = document.getElementById('cave-button');
+const fallsButton = document.getElementById('falls-button');
 
 // Audio files for various game sounds, played at specific moments
 const levelUpSound1 = new Audio("sounds/levelup1.wav");
@@ -44,9 +50,14 @@ const fireSound = new Audio("sounds/fire.mp3");
 const nightSound = new Audio("sounds/night.mp3");
 const successSound = new Audio("sounds/success.mp3");
 
+// Audio control
+let audioEnabled = true;
+
 // Variables to track game state
 let count = 0;           // General counter for tracking certain events
 let nightCounter = 0;    // Counter to track the number of nights passed
+let gameProgress = 0;    // Track game progress for progress bar
+let darkMode = false;    // Dark mode state
 
 // Random Numbers for energy drop after user searches locations and does activities
 let randomNum1 = Math.floor(Math.random() * 6) + 30;
@@ -83,6 +94,97 @@ let reportVariables = {
 // Array for data that will be exported from report page
 let reportData = [];
 
+// Initialize dark mode from localStorage
+document.addEventListener("DOMContentLoaded", () => {
+    // Check for dark mode preference
+    const darkModePref = localStorage.getItem('darkMode') === 'true';
+    if (darkModePref) {
+        document.body.classList.add('dark-mode');
+        if (document.getElementById('dark-mode-toggle')) {
+            document.getElementById('dark-mode-toggle').checked = true;
+        }
+        darkMode = true;
+    }
+    
+    // Event listener for dark mode toggle
+    if (document.getElementById('dark-mode-toggle')) {
+        document.getElementById('dark-mode-toggle').addEventListener('change', toggleDarkMode);
+    }
+    
+    // Event listener for audio toggle
+    if (document.getElementById('audio-toggle')) {
+        document.getElementById('audio-toggle').addEventListener('change', toggleAudio);
+    }
+    
+    // Set event listeners for control buttons
+    if (restartButton) {
+        restartButton.addEventListener('click', restartGame);
+    }
+    
+    if (helpButton) {
+        helpButton.addEventListener('click', helpButtonClick);
+    }
+    
+    if (voiceButton) {
+        voiceButton.addEventListener('click', setupSpeechRecognition);
+    }
+    
+    if (exportButton) {
+        exportButton.addEventListener('click', function() {
+            exportToExcel(reportData, "ReportStats.xlsx");
+            showToast("Report exported successfully!");
+        });
+    }
+});
+
+// Function to toggle dark mode
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    darkMode = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', darkMode);
+    showToast(darkMode ? "Dark mode enabled" : "Light mode enabled");
+}
+
+// Function to toggle audio
+function toggleAudio() {
+    audioEnabled = document.getElementById('audio-toggle').checked;
+    showToast(audioEnabled ? "Audio enabled" : "Audio muted");
+    
+    // Mute or unmute all audio elements
+    const audioElements = [
+        levelUpSound1, levelUpSound2, levelUpSound3, 
+        levelUpSound4, levelUpSound5, levelUpSound6,
+        failureSound, fireSound, nightSound, successSound
+    ];
+    
+    audioElements.forEach(audio => {
+        audio.muted = !audioEnabled;
+    });
+}
+
+// Function to show toast notification
+function showToast(message, duration = 3000) {
+    toastNotification.textContent = message;
+    toastNotification.classList.add('show');
+    
+    setTimeout(() => {
+        toastNotification.classList.remove('show');
+    }, duration);
+}
+
+// Function to update progress indicator
+function updateProgress(progress) {
+    gameProgress = progress;
+    progressIndicator.style.width = `${progress}%`;
+}
+
+// Play sound function that respects audio toggle
+function playSound(sound) {
+    if (audioEnabled) {
+        sound.play();
+    }
+}
+
 // Main function that helps user navigate between screens
 function choose(option) {    
     currentPage = option;
@@ -91,50 +193,62 @@ function choose(option) {
         //The user clicks Instructions
         case 'instruct':
             setupInstructionPage();
+            updateProgress(10);
             break;
         // If the button clicked is "Begin"
         case 'begin':
             setupBeginPage();
+            updateProgress(20);
             break;
         // If button clicked is continue
         case 'continue':
             setupArrivalPage();
+            updateProgress(30);
             break;
         // If button clicked is Explore
         case 'Explore':
             setupExploreIslandPage();
+            updateProgress(40);
             break;
         // If the button clicked it Return
         case 'Return':
             setupEveningPage();
+            updateProgress(50);
             break;
         // If create a fire button is clicked:
         case 'Fire':
             setupFirePage();
+            updateProgress(40);
             break;
         // If the button buildFire is clicked:
         case 'buildFire':
             setupBuildFirePage();
+            updateProgress(50);
             break;
         // If user clicks Small Shelter
         case 'smallShelter':
-            setupShelter('images/smallshelter.jpeg', "Small Shelter");            
+            setupShelter('images/smallshelter.jpeg', "Small Shelter");
+            updateProgress(60);
             break;
         // If user clicks Medium Shelter
         case 'mediumShelter':
-            setupShelter('images/mediumshelter.jpeg', "Medium Shelter");            
+            setupShelter('images/mediumshelter.jpeg', "Medium Shelter");
+            updateProgress(60);
             break;
         // If user to build a large shelter
         case 'largeShelter':
-            setupShelter('images/largeImage.jpeg', "Large Shelter");            
+            setupShelter('images/largeImage.jpeg', "Large Shelter");
+            updateProgress(60);
             break;
         // If user clicks advance to next day
         case 'nextDay':
             setupNextDayPage();
+            updateProgress(70);
             break;
         // If user wants to wave to get ship's attention
         case 'shipAttention':
             setupShipAttentionPage();
+            updateProgress(80);
             break;
         // If user has to option to retry:
         case 'reTry':
@@ -146,7 +260,7 @@ function choose(option) {
         // If the user decides to write help on the sand
         case 'helpOnSand':
             setupSuccessPage();
-            // choose('Return'); // make sure to change
+            updateProgress(100);
             break;
         // If user clicks home to restart game
         case 'report':
@@ -166,487 +280,24 @@ function choose(option) {
     }    
 }
 
-// Function to create energy points which will be visible on right hand corner
-function createEnergyPoints() {
-    // Create the energy points element
-    const energyPoints = document.createElement('p');
-    energyPoints.style.position = 'fixed'; // Fixed position to keep it in the viewport
-    energyPoints.style.top = '40px'; // Position from the top
-    energyPoints.style.right = '380px'; // Position from the right
-    energyPoints.style.fontSize = '18px'; // Font size
-    energyPoints.style.fontWeight = 'bold'; // Make the text bold
-    energyPoints.style.position = 'absolute';
-    energyPoints.style.backgroundColor = '#f39c12'; // Background color for emphasis
-    energyPoints.style.color = '#ffffff'; // Text color
-    energyPoints.style.padding = '8px 12px'; // Padding around the text
-    energyPoints.style.borderRadius = '8px'; // Rounded corners
-    energyPoints.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
-    energyPoints.innerText = "100";
-    energyPoints.style.position = 'absolute';
-    energyPoints.style.display = 'none';
-    document.body.appendChild(energyPoints);
-    return energyPoints;
-}
-
-function createEnergyImage(){
-    const energyImg = document.createElement('img');
-    energyImg.src = 'images/energy.jpeg'; // source of image
-    energyImg.style.width = '70px'; // Set the width of the image
-    energyImg.style.height = '70px'; // Set the height of the image
-    energyImg.style.borderRadius = '50%'; // Make the image circular
-    energyImg.style.position = 'fixed'; // Use fixed positioning
-    energyImg.style.position = 'absolute'; // Ensures Image doesn't move
-    energyImg.style.top = '20px'; // Set the top position (adjust as needed)
-    energyImg.style.right = '20px'; // Set the right position (adjust as needed)
-    energyImg.style.objectFit = 'cover'; // Ensures the image covers the circular area
-    energyImg.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)'; // adding shadow    
-    energyImg.style.left = '350px';
-    energyImg.style.display = 'none' // Hide initially
-    document.body.appendChild(energyImg);
-    return energyImg;
-}
-
-// Function to create a message after user picks a shelter they want to build
-function createShelterMessage() {
-    // Create a new <p> element to hold the shelter message
-    const shelterMessage = document.createElement('p');
-    // Initially hide the message (can be shown later by changing display style)
-    shelterMessage.style.display = 'none';
-    // Set the message content
-    shelterMessage.innerHTML = 'Great Choice. This shelter will be the key to your success in the future';
-    // Position the message absolutely relative to the viewport
-    shelterMessage.style.position = 'absolute'; // Fixed positioning for precise control
-    shelterMessage.style.bottom = '10px';       // 20px from the bottom of the viewport
-    shelterMessage.style.left = '50%';          // Center horizontally
-    shelterMessage.style.transform = 'translateX(-50%)'; // Adjust to keep it centered
-    // Style the text
-    shelterMessage.style.fontSize = '0.9em';            // Set font size slightly smaller than default
-    shelterMessage.style.textAlign = 'center';          // Center-align text
-    shelterMessage.style.color = '#B22222';             // Red text color for emphasis
-    shelterMessage.style.fontWeight = 'bold';           // Bold font
-    shelterMessage.style.fontFamily = 'Verdana, sans-serif'; // Font choice
-    shelterMessage.style.letterSpacing = '1px';         // Slightly increased letter spacing
-    shelterMessage.style.textShadow = '1px 1px 3px rgba(0, 0, 0, 0.3)'; // Subtle shadow for readability
-    // Add padding and background for readability
-    shelterMessage.style.padding = '10px 20px';         // Padding around text
-    shelterMessage.style.backgroundColor = '#fff8e1';   // Light yellow background for contrast
-    shelterMessage.style.border = '1px solid #B22222';  // Border in same red as text
-    shelterMessage.style.borderRadius = '6px';          // Rounded corners for a softer look
-    shelterMessage.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'; // Slight shadow for depth
-    shelterMessage.style.opacity = '0.9';               // Slightly transparent for aesthetic touch
-    // Ensure it appears above other elements
-    shelterMessage.style.zIndex = '10';
-    // Add the message to the document's body
-    document.body.appendChild(shelterMessage);
-    // Return the element in case it needs to be accessed or modified later
-    return shelterMessage;
-}
-
-// Function to create a success message when user gets rescued
-function creatingSuccessMessage() {
-    // Create a new <p> element for the success message
-    const successMessage = document.createElement('p');
-    // Position the message absolutely within the viewport
-    successMessage.style.position = 'absolute'; // Use absolute positioning to control placement
-    successMessage.style.bottom = '70px';       // 70px from the bottom of the viewport
-    successMessage.style.left = '50%';          // Center horizontally on the page
-    successMessage.style.transform = 'translateX(-50%)'; // Offset to ensure exact horizontal center
-    // Style the message background and text
-    successMessage.style.backgroundColor = 'rgba(255, 0, 0, 0.8)'; // Semi-transparent red background
-    successMessage.style.color = 'white';                          // White text for contrast
-    successMessage.style.padding = '10px 20px';                    // Padding around the text for readability
-    successMessage.style.borderRadius = '5px';                     // Rounded corners for a smoother look
-    // Set display and stacking context
-    successMessage.style.zIndex = '1000';     // High z-index to ensure it displays above other elements
-    successMessage.style.display = 'none';    // Initially hide the message (show it later by changing display style)
-    // Set the message content
-    successMessage.innerText = "You have escaped the island! Good luck on your journey ahead!";
-    // Add the message element to the document's body
-    document.body.appendChild(successMessage);
-    // Return the element in case it needs to be accessed or modified later
-    return successMessage;
-}
-
-// Function to create a failure message when user picks wrong escape option
-function createFailureMessage() {
-    // Create a new <p> element for the failure message
-    const failureMessage = document.createElement('p');
-    // Position the message absolutely within the viewport
-    failureMessage.style.position = 'absolute'; // Use absolute positioning for precise control
-    failureMessage.style.bottom = '70px';       // 70px from the bottom of the viewport
-    failureMessage.style.left = '50%';          // Center horizontally
-    failureMessage.style.transform = 'translateX(-50%)'; // Offset to ensure exact horizontal center
-    // Style the message background and text
-    failureMessage.style.backgroundColor = 'rgba(139, 0, 0, 0.9)'; // Darker, semi-transparent red background
-    failureMessage.style.color = '#f8f9fa';                         // Light, slightly off-white text for contrast
-    failureMessage.style.padding = '12px 24px';                    // Padding for better spacing
-    failureMessage.style.borderRadius = '8px';                     // Softer, more rounded corners
-    failureMessage.style.border = '1px solid #8B0000';             // Border in a darker shade of red for emphasis
-    failureMessage.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)'; // Slight shadow for depth
-    // Text styling
-    failureMessage.style.fontSize = '1em';              // Standard font size
-    failureMessage.style.fontFamily = 'Arial, sans-serif'; // Clean and readable font
-    failureMessage.style.textAlign = 'center';          // Center-align text
-    failureMessage.style.fontWeight = 'bold';           // Bold text to emphasize failure
-    failureMessage.style.letterSpacing = '1px';         // Slightly increased letter spacing
-    // Set display and stacking context
-    failureMessage.style.zIndex = '1000';               // High z-index to ensure it appears above other elements
-    failureMessage.style.display = 'none';              // Initially hide the message (can be displayed later)
-    // Set the message content
-    failureMessage.innerText = "You have failed to escape the island. Tough Luck";
-    // Add the message element to the document's body
-    document.body.appendChild(failureMessage);
-    // Return the element in case it needs to be accessed or modified later
-    return failureMessage;
-}
-
-// Function to create an image of the Skull Rock location
-function creatingSkullRockImage() {
-    // Create a new <img> element to represent the Skull Rock image
-    const skullRockImg = document.createElement('img');
-    // Set the image source to the Skull Rock image file
-    skullRockImg.src = "images/skullrock.jpeg";
-    // Position the image absolutely within the viewport
-    skullRockImg.style.position = 'absolute'; // Absolute positioning for precise control
-    skullRockImg.style.left = '28%';          // Position closer to the center horizontally
-    skullRockImg.style.top = '30%';           // Position vertically at 30% from the top
-    // Set the image dimensions
-    skullRockImg.style.width = '10%';         // Scale down the image for a smaller display
-    // Hide the image initially
-    skullRockImg.style.display = 'none';      // Image will only be shown when needed
-    // Adding the image element to the document's body
-    document.body.appendChild(skullRockImg);
-    // Return the image element in case it needs to be accessed or modified later
-    return skullRockImg;
-}
-
-// Function to create an image of the Ghost Cave location
-function creatingGhostLightCaveImage() {
-    // Create a new <img> element for the Ghost Cave image
-    const ghostLightCaveImg = document.createElement('img');
-    // Set the image source to the Ghost Cave image file
-    ghostLightCaveImg.src = 'images/ghostlightcave.jpeg';
-    // Position the image absolutely within the viewport
-    ghostLightCaveImg.style.position = 'absolute'; // Use absolute positioning for precise control
-    ghostLightCaveImg.style.left = '45%';          // Position it closer to the center horizontally
-    ghostLightCaveImg.style.top = '30%';           // Position it 30% from the top
-    // Set the image dimensions
-    ghostLightCaveImg.style.width = '10%';         // Scale down the image to be smaller
-    // Hide the image initially
-    ghostLightCaveImg.style.display = 'none';      // Image will only be shown when needed
-    // Adding the image element to the document's body
-    document.body.appendChild(ghostLightCaveImg);
-    // Return the image element in case it needs to be accessed or modified later
-    return ghostLightCaveImg;
-}
-
-// Function to create an image of the Forgotten Falls location
-function creatingForgottenFalls() {
-    // Create a new <img> element for the Forgotten Falls image
-    const forgottenFallsImg = document.createElement('img');
-    // Set the image source to the Forgotten Falls image file
-    forgottenFallsImg.src = 'images/forgottenfalls.jpeg';
-    // Position the image absolutely within the viewport
-    forgottenFallsImg.style.position = 'absolute'; // Use absolute positioning for precise control
-    forgottenFallsImg.style.right = '28%';         // Position it closer to the center horizontally from the right
-    forgottenFallsImg.style.top = '30%';           // Position it 30% from the top for a higher placement
-    // Set the image dimensions
-    forgottenFallsImg.style.width = '10%';         // Scale down the image to be smaller
-    // Hide the image initially
-    forgottenFallsImg.style.display = 'none';      // Image will only be shown when needed
-    // Adding the image element to the document's body
-    document.body.appendChild(forgottenFallsImg);
-    // Return the image element in case it needs to be accessed or modified later
-    return forgottenFallsImg;
-}
-
-// Function to create the Skull Rock location Button
-function creatingSkullRockButton(){
-    const skullRockButton = document.createElement('button');
-    skullRockButton.innerText = "Skull Rock"; // Text of Button
-    skullRockButton.style.position = 'absolute'; // Fixed position
-    skullRockButton.style.left = '28.25%'; // Center position
-    skullRockButton.style.top = '50%'; // Adjust this value to position higher
-    skullRockButton.style.width = '10%'; // Make it smaller
-    skullRockButton.style.height = '40px'; // Set a fixed height for better consistency
-    skullRockButton.style.backgroundColor = '#f39c12'; // Background color
-    skullRockButton.style.color = '#ffffff'; // Text color
-    skullRockButton.style.border = 'none'; // No border
-    skullRockButton.style.borderRadius = '8px'; // Rounded corners
-    skullRockButton.style.cursor = 'pointer'; // Cursor style on hover
-    skullRockButton.style.fontSize = '16px'; // Font size for readability
-    skullRockButton.style.fontWeight = 'bold'; // Bold text
-    skullRockButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)'; // Soft shadow
-    skullRockButton.style.transition = 'background-color 0.3s, transform 0.2s'; // Smooth transition effects
-    skullRockButton.style.padding = '10px'; // Padding for a better touch target
-    skullRockButton.style.display = 'none'; // Hide image initially
-    document.body.appendChild(skullRockButton);
-    return skullRockButton;
-}
-
-// Function to create the Ghost Cave location button
-function creatingCaveButton() {
-    // Create a new <button> element for the Ghost Cave location
-    const caveButton = document.createElement('button');
-    // Set the button text to "Ghost Cave"
-    caveButton.innerText = "Ghost Cave";
-    // Position the button absolutely within the viewport
-    caveButton.style.position = 'absolute';      // Absolute positioning for precise control
-    caveButton.style.left = '45.25%';            // Center position (slightly adjusted for precise centering)
-    caveButton.style.top = '50%';                // Position it at 50% from the top for middle alignment
-    // Set the button dimensions
-    caveButton.style.width = '10%';              // Set a smaller width for the button
-    caveButton.style.height = '40px';            // Set a fixed height for a consistent button size
-    // Style the button appearance
-    caveButton.style.backgroundColor = '#f39c12'; // Bright background color for visibility
-    caveButton.style.color = '#ffffff';           // White text color for contrast
-    caveButton.style.border = 'none';             // Remove default border for a cleaner look
-    caveButton.style.borderRadius = '8px';        // Rounded corners for a modern design
-    caveButton.style.cursor = 'pointer';          // Change cursor on hover to indicate interactivity
-    caveButton.style.fontSize = '16px';           // Font size for readability
-    caveButton.style.fontWeight = 'bold';         // Bold text for emphasis
-    // Add visual effects
-    caveButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)'; // Shadow for depth
-    caveButton.style.transition = 'background-color 0.3s, transform 0.2s'; // Smooth transition effects on hover
-    caveButton.style.padding = '10px';            // Padding for text spacing within the button
-    // Hide the button initially
-    caveButton.style.display = 'none';            // Button will be displayed only when needed
-    // Adding the button element to the document's body
-    document.body.appendChild(caveButton);
-    // Return the button element in case it needs to be accessed or modified later
-    return caveButton;
-}
-
-// Function to create the Forgotten Falls location button
-function creatingFallsButton() {
-    // Create a new <button> element for the Forgotten Falls location
-    const fallsButton = document.createElement('button');
-    // Set the button text to "Forgotten Falls"
-    fallsButton.innerText = "Forgotten Falls";
-    // Position the button absolutely within the viewport
-    fallsButton.style.position = 'absolute';      // Absolute positioning for precise placement
-    fallsButton.style.right = '27.75%';           // Position closer to the center from the right
-    fallsButton.style.top = '50%';                // Position it at 50% from the top for middle alignment
-    // Set the button dimensions
-    fallsButton.style.width = '11%';              // Set a smaller width for the button
-    fallsButton.style.height = '40px';            // Fixed height for a consistent button size
-    // Style the button appearance
-    fallsButton.style.backgroundColor = '#f39c12'; // Orange background color for visibility
-    fallsButton.style.color = '#ffffff';           // White text color for contrast
-    fallsButton.style.border = 'none';             // Remove default border for a cleaner look
-    fallsButton.style.borderRadius = '8px';        // Rounded corners for a smooth appearance
-    fallsButton.style.cursor = 'pointer';          // Pointer cursor to indicate interactivity
-    fallsButton.style.fontSize = '16px';           // Font size for readability
-    fallsButton.style.fontWeight = 'bold';         // Bold text for emphasis
-    // Add visual effects
-    fallsButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)'; // Soft shadow for depth
-    fallsButton.style.transition = 'background-color 0.3s, transform 0.2s'; // Smooth transition effects for hover
-    // Add padding for text spacing within the button
-    fallsButton.style.padding = '10px';
-    // Hide the button initially
-    fallsButton.style.display = 'none';            // Button will only be shown when needed
-    // Adding the button element to the document's body
-    document.body.appendChild(fallsButton);
-    // Return the button element in case it needs to be accessed or modified later
-    return fallsButton;
-}
-
-// Function to create the stop button when shown on left corner
-function creatingStopButton(){
-    // Create a button element
-    const stopButton = document.createElement('button');
-    stopButton.style.width = '70px';
-    stopButton.style.height = '70px';
-    stopButton.style.position = 'absolute';
-    stopButton.style.top = '15px';
-    stopButton.style.left = '320px'; // Position the button to the right
-    stopButton.style.border = 'none'; // Remove default button border
-    stopButton.style.padding = '0'; // Remove padding
-    stopButton.style.margin = '0'; // Remove margin
-    stopButton.style.backgroundColor = 'transparent'; // Ensure background is transparent
-    stopButton.style.cursor = 'pointer';
-    stopButton.style.display = 'flex'; // Center image within button
-    stopButton.style.display = 'none'; // Hide Initially
-    // Create an image element for the stop sign
-    const stopImage = document.createElement('img');
-    stopImage.src = 'images/stop.jpeg'; // Ensure the path to the stop sign image is correct
-    stopImage.alt = 'Stop Sign';
-    stopImage.style.width = '100%'; // Image fills the button's width
-    stopImage.style.height = '100%'; // Image fills the button's height
-    stopImage.style.objectFit = 'cover'; // Ensure the image covers the square area
-    // Append the image to the button
-    stopButton.appendChild(stopImage);
-    // Add a click event listener to go back to the specified HTML page
-    stopButton.addEventListener('click', () => {
-        restartGame(); // Reload the webapp
-    });
-    // Append the button to the body
-    document.body.appendChild(stopButton);
-    // Return the button element in case you need to manipulate it further
-    return stopButton;
-}
-
-// Function to create the microphone button
-function creatingMicrophoneButton(){
-    // Create a button element
-    const microPhoneButton = document.createElement('button');
-    microPhoneButton.style.width = '70px';
-    microPhoneButton.style.height = '70px';
-    microPhoneButton.style.position = 'absolute';
-    microPhoneButton.style.top = '15px';
-    microPhoneButton.style.left = '400px'; // Position the button to the right
-    microPhoneButton.style.border = 'none'; // Remove default button border
-    microPhoneButton.style.padding = '0'; // Remove padding
-    microPhoneButton.style.margin = '0'; // Remove margin
-    microPhoneButton.style.backgroundColor = 'transparent'; // Ensure background is transparent
-    microPhoneButton.style.cursor = 'pointer';
-    microPhoneButton.style.display = 'flex'; // Center image within button
-    microPhoneButton.style.display = 'none'; // Hide Initially
-    // Create an image element for the stop sign
-    const microphoneOnImage = document.createElement('img');
-    microphoneOnImage.src = 'images/mic.webp'; // Ensure the path to the stop sign image is correct
-    microphoneOnImage.alt = 'Microphone';
-    microphoneOnImage.style.width = '100%'; // Image fills the button's width
-    microphoneOnImage.style.height = '100%'; // Image fills the button's height
-    microphoneOnImage.style.objectFit = 'cover'; // Ensure the image covers the square area
-    // Append the image to the button
-    microPhoneButton.appendChild(microphoneOnImage);
-    // Add a click event listener to start voice recognition;
-    microPhoneButton.addEventListener('click', setupSpeechRecognition);
-    // Append the button to the body
-    document.body.appendChild(microPhoneButton);
-    // Return the button element in case you need to manipulate it further
-    return microPhoneButton;
-}
-
-function creatingExportButton(){
-    // Create a button element
-    const exportButton = document.createElement('button');
-    exportButton.style.width = '70px'; // Set Width
-    exportButton.style.height = '70px'; // Set Height
-    exportButton.style.position = 'absolute'; // Fixed position for the top-right corner
-    exportButton.style.top = '15px'; // Top height
-    exportButton.style.right = '330px'; // Position the button on the right
-    exportButton.style.border = 'none'; // Remove default button border
-    exportButton.style.padding = '0'; // Remove padding
-    exportButton.style.margin = '0'; // Remove margin
-    exportButton.style.backgroundColor = 'transparent'; // Ensure background is transparent
-    exportButton.style.cursor = 'pointer'; // Highlight when pointed
-    exportButton.style.display = 'flex'; // Center image within button
-    exportButton.style.display = 'none'; // Hide Initially
-    // Create an image element for the stop sign
-    const exportImage = document.createElement('img');
-    exportImage.src = 'images/exportfinal.webp'; // Ensure the path to the export sign image is correct
-    exportImage.style.width = '100%'; // Image fills the button's width
-    exportImage.style.height = '100%'; // Image fills the button's height
-    exportImage.style.objectFit = 'cover'; // Ensure the image covers the square area
-    // Append the image to the button
-    exportButton.appendChild(exportImage);
-    //JSON.stringify(reportData)
-    exportButton.addEventListener('click', () => {
-        exportToExcel(reportData, "ReportStats.xlsx");
-    });
-
-    // Append the button to the body
-    document.body.appendChild(exportButton);
-    // Return the button element in case you need to manipulate it further
-    return exportButton;
-}
-
-// Function to create the Help Button which is displayed on instructions
-function creatingHelpButton(){
-    // Create a button element
-    const helpButton = document.createElement('button');
-    helpButton.style.width = '44px'; // Set Width
-    helpButton.style.height = '44px'; // Set Height
-    helpButton.style.position = 'relative'; // Fixed position for the top-right corner
-    helpButton.style.bottom = '92px'; // Bottom height
-    helpButton.style.left = '292px'; // Position the button on the right
-    helpButton.style.border = 'none'; // Remove default button border
-    helpButton.style.padding = '0'; // Remove padding
-    helpButton.style.margin = '0'; // Remove margin
-    helpButton.style.backgroundColor = 'transparent'; // Ensure background is transparent
-    helpButton.style.cursor = 'pointer'; // Highlight when pointed
-    helpButton.style.display = 'flex'; // Center image within button
-    helpButton.style.display = 'none'; // Hide Initially
-    // Create an image element for the stop sign
-    const helpImage = document.createElement('img');
-    helpImage.src = 'images/question.jpeg'; // Ensure the path to the question sign image is correct
-    helpImage.style.width = '100%'; // Image fills the button's width
-    helpImage.style.height = '100%'; // Image fills the button's height
-    helpImage.style.objectFit = 'cover'; // Ensure the image covers the square area
-    // Append the image to the button
-    helpButton.appendChild(helpImage);
-    // Add a click event listener to go to the specified HTML page
-    helpButton.addEventListener('click', helpButtonClick);
-    // Append the button to the body
-    document.body.appendChild(helpButton);
-    // Return the button element in case you need to manipulate it further
-    return helpButton;
-}
-
-function helpButtonClick(){
-    reportVariables.helpCount++;
-
-    sessionStorage.setItem("currentPage", currentPage);
-    sessionStorage.setItem("stopButtonDisplayStatus", stopButton.style.display);
-    sessionStorage.setItem("microPhoneButtonDisplayStatus", microPhoneButton.style.display);
-    sessionStorage.setItem("helpButtonDisplayStatus", helpButton.style.display);
-    sessionStorage.setItem("energyPointsElementDisplayStatus", energyPointsElement.style.display);
-    sessionStorage.setItem("energyPointsElementValue", energyPointsElement.innerText);
-    sessionStorage.setItem("energyImageDisplayStatus", energyImage.style.display);
-    sessionStorage.setItem("reportVariables", JSON.stringify(reportVariables));
-        
-    //hide buttons on the top
-    stopButton.style.display = 'none';
-    microPhoneButton.style.display = 'none';
-    helpButton.style.display = 'none';
-    energyPointsElement.style.display = 'none';
-    energyImage.style.display = 'none';
-
-    window.location.href = 'helpPage.html';    
-}
-
-// Event Listener to load the instructions page when back is clicked from QnA
-window.addEventListener("load", function() {
-    if (sessionStorage.getItem("returnFromHelp") === "true") {
-        currentPageToReturn = sessionStorage.getItem("currentPage");
-        // Get back to the same state as before help button was clicked
-        stopButton.style.display = sessionStorage.getItem("stopButtonDisplayStatus");
-        microPhoneButton.style.display = sessionStorage.getItem("microPhoneButtonDisplayStatus");
-        helpButton.style.display = sessionStorage.getItem("helpButtonDisplayStatus");
-        energyPointsElement.style.display = sessionStorage.getItem("energyPointsElementDisplayStatus");
-        energyPointsElement.innerText = sessionStorage.getItem("energyPointsElementValue");
-        energyImage.style.display = sessionStorage.getItem("energyImageDisplayStatus");
-        reportVariables = JSON.parse(sessionStorage.getItem("reportVariables"));                
-        //survivalImage.style.display = 'none';        
-        credentials.style.display = 'none';
-        beware.style.display = 'none';
-
-        // Remove the flag so it doesn't repeat                
-        sessionStorage.removeItem("returnFromHelp");
-        sessionStorage.removeItem("currentPage");
-        
-        // Go back to the page from where help was clicked
-        choose(currentPageToReturn);
-    }
-});
-
+// Function to setup the instruction page
 function setupInstructionPage(){
     // Play sound of levelUp 1
-    levelUpSound1.play();
-    // Display imagse  for help, stop and microphone
-    helpButton.style.display = 'block';
-    stopButton.style.display = 'block';
-    microPhoneButton.style.display = 'block';
+    playSound(levelUpSound1);
+    
+    // Show control buttons
+    helpButton.style.display = 'flex';
+    restartButton.style.display = 'flex';
+    voiceButton.style.display = 'flex';
 
     // Hide Image
     survivalImage.style.display = 'none';
-    // Credentials are hid
+    // Credentials are hidden
     credentials.style.display = 'none';
     
     // Title changed to instructions
     storyTitle.innerText = 'Instructions';
+    
     // Creating text and instructions
     storyText.innerHTML = `
         <p>The mission of this app is to lead your team to survival!
@@ -654,55 +305,62 @@ function setupInstructionPage(){
          Blinding ash caused the plane to crash into the unknown. You must find ways to escape the island 
          before it is too late.</p>
         <ul id = "instruction_list">
-            <li>Choice 1: Explore : Find Locations on the Island</li>
-            <li>Choice 2: Fire: You need to stay warm</li>
-            <li>Choice 3: Shelter: Cover is essential</li>
-            <li>Choice 4: The Ship: Get rescued by a ship</li>
-            <li>Choice 5: The Helicopter: Get rescued by a helicopter</li>
-            <li>Note: There will be an energy symbol on the right corner. Voice
+            <li><i class="fas fa-map-marked-alt"></i> Choice 1: Explore - Find Locations on the Island</li>
+            <li><i class="fas fa-fire"></i> Choice 2: Fire - You need to stay warm</li>
+            <li><i class="fas fa-home"></i> Choice 3: Shelter - Cover is essential</li>
+            <li><i class="fas fa-ship"></i> Choice 4: The Ship - Get rescued by a ship</li>
+            <li><i class="fas fa-helicopter"></i> Choice 5: The Helicopter - Get rescued by a helicopter</li>
+            <li><i class="fas fa-info-circle"></i> Note: There will be an energy symbol on the right corner. Voice
             Activation and AI are tools to help throughout this program</li>
         </ul>
     `;
+    
     // Hide beware text
     beware.style.display = 'none';
+    
     // Creating Begin Button
     choices.innerHTML = `
-        <button onclick="choose('begin')">Begin Your Quest</button>
-    `;    
+        <button onclick="choose('begin')"><i class="fas fa-play"></i> Begin Your Quest</button>
+    `;
+    
+    // Show toast notification
+    showToast("Welcome to Island Survival! Read the instructions to get started.");
 }
 
+// Function to setup the beginning page
 function setupBeginPage(){
     // Play sound to enhance the beginning scene
-    levelUpSound5.play();
-    // Hiding the help button
-    //helpButton.style.display = 'none';
+    playSound(levelUpSound5);
+    
     // Set the title of the page to "The Beginning"
     storyTitle.innerText = "The Beginning";
+    
     // Change the survival image to the plane crash image and apply styling
     survivalImage.src = 'images/plane.webp';  // Set image source to plane crash
     survivalImage.style.display = 'block';  // Make the image visible
-    survivalImage.style.width = '60%';  // Set image width to 60% of container
-    survivalImage.style.borderRadius = '10px';  // Round the image corners slightly
-    survivalImage.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';  // Apply shadow for depth effect
-    survivalImage.style.marginTop = '4px'; // Add top margin for spacing
-    survivalImage.style.animation = 'popUp 1.75s ease forwards'; // Add animation for image entrance
+    
     // Change the story text to introduce the beginning scenario
     storyText.innerText = "You are in a plane with the pilot when everything goes blurry. " +
         "You look out the window " + "and the plane is uncontrollable. The plane crashes and " +
         "you hit your head hard on the seat next to you...";
+    
     // Create a "Continue" button for the player to proceed to the next part of the story
     choices.innerHTML = `
-        <button onclick="choose('continue')">Continue</button>
-    `;    
+        <button onclick="choose('continue')"><i class="fas fa-arrow-right"></i> Continue</button>
+    `;
+    
+    // Show toast message
+    showToast("Your adventure begins...");
 }
 
+// Function to setup the arrival page
 function setupArrivalPage(){
     // play levelUp 2 sound
-    levelUpSound2.play();
-        
-    energyImage.style.display = 'block'; // show the energy image   
-    energyPointsElement.style.display = 'block';
-    energyPointsElement.innerText = "50";
+    playSound(levelUpSound2);
+    
+    // Show energy display    
+    energyDisplay.style.display = 'flex';
+    energyValue.textContent = "50";
     
     // Change title to Arrival
     storyTitle.innerText = "The Arrival";
@@ -713,11 +371,12 @@ function setupArrivalPage(){
         scattered wreckage of the plane. As you step out of the plane, you notice that you aren't alone.
         You have 3 companions - Ishaan, Mikail, and Aryaman.</p>
         <ul id = "names_list">
-            <li>Ishaan: Athletic, Sporty, and a Jock</li>
-            <li>Mikail: Extremely Smart, Talented, and Defined</li>
-            <li>Aryaman: Strong, Tall, and Muscular</li>
+            <li><i class="fas fa-running"></i> Ishaan: Athletic, Sporty, and a Jock</li>
+            <li><i class="fas fa-brain"></i> Mikail: Extremely Smart, Talented, and Defined</li>
+            <li><i class="fas fa-dumbbell"></i> Aryaman: Strong, Tall, and Muscular</li>
         </ul>
     `;
+    
     // changing image to plane crash
     survivalImage.src = "images/planecrash.webp"; // source of image
     // setting animation of that image
@@ -732,6 +391,7 @@ function setupArrivalPage(){
             fill: 'forwards'   // Keeps the final state after animation
         }
     );
+    
     // Creating Instructions for user to start their experience
     const instructions = document.createElement('p');
     // Setting Instruction Text
@@ -739,196 +399,207 @@ function setupArrivalPage(){
         "steps. Choose carefully!"
     // Adding it onto the page
     storyText.appendChild(instructions);
-    // Creating energyPoint Text and setting it to 50
 
-    // Creating New Buttons
+    // Creating New Buttons with icons
     choices.innerHTML = `
-        <button style="margin-right: 15px;" onclick="choose('Explore')">Explore the Island</button>
-        <button onclick="choose('Fire')">Build a Fire</button>
+        <button style="margin-right: 15px;" onclick="choose('Explore')">
+            <i class="fas fa-compass"></i> Explore the Island
+        </button>
+        <button onclick="choose('Fire')">
+            <i class="fas fa-fire"></i> Build a Fire
+        </button>
     `;
+    
+    // Show toast message
+    showToast("You've been stranded! Make your first decision.");
 }
 
+// Function to setup the explore island page
 function setupExploreIslandPage(){
-    levelUpSound3.play();
+    playSound(levelUpSound3);
+    
     // Explore island is set to true
     reportVariables.exploreIsland = true;
+    
     //Update Title
     storyTitle.innerText = "Exploration";
+    
     //Update Text
     storyText.innerText = "You decide to explore the island. Each of you go to one " +
         "corner of the island. As your walking, you pass by 3 locations. Please select 2 locations " +
-        "that you found the most interesting."
-    // Creating an image placeholder
-    survivalImage.src = "images/whiteimg.jpeg";
-    survivalImage.style.border = 'none';
-    survivalImage.style.boxShadow = 'none';
-    // Creating 3 images for the 3 locations
-    //Creating Skull Rock Image
-    skullRockImage.style.display = 'block';
-    // Creating Ghost Light Cave Image
-    ghostLightCaveImage.style.display = 'block';
-    // Creating Forgotten Falls Image
-    forgottenFallsImage.style.display = 'block';
-    // Making the 3 location buttons
-    // Skull Rock button
-    skullRockButton.style.display = 'block';
+        "that you found the most interesting.";
+    
+    // Hide main image    
+    survivalImage.style.display = 'none';
+    
+    // Show location container
+    locationContainer.style.display = 'flex';
+    
+    // Setup click handlers for location buttons
     skullRockButton.onclick = function() {
-        // Checks count and depending on, updates energy count and images
-        count = count + 1;
-        // Skull Location will be visited on the report
-        reportVariables.skullLocation = true;
-        if(count === 1){
-            // Crosses out Skull Rock Image
-            skullRockImage.src = 'images/cross.jpeg'; // source of image
-            skullRockButton.style.display = 'none'; // makes it visible
-            energyPointsElement.style.display = 'block';
-            energyPointsElement.innerText = reportVariables.energyAfterLocation1; // changes energy points
-            // Update message about Skull Rock
-            storyText.innerText = "You decide to visit the unusual rock shaped like a skull and find yourself " +
-                            "surrounded with birds. You find multiple food sources such as animals and vegetables!"
-            storyText.style.color = "purple";
-        }
-        if(count === 2){
-            // Crossing out Skull Rock Image
-            skullRockImage.src = 'images/cross.jpeg';
-            skullRockButton.style.display = 'none';
-            energyPointsElement.style.display = 'block';
-            energyPointsElement.innerText =  reportVariables.energyAfterLocation2;
-            // Changing Text
-            storyText.innerText = "You decide to visit the unusual rock shaped like a skull and find yourself " +
-                "surrounded with birds. You find multiple food sources such as animals and vegetables!"
-            storyText.style.color = "purple";
-            // A message is displayed to user warming him to turn back
-            beware.style.position = 'fixed'; // Fixed position to stay at the bottom
-            beware.style.bottom = '90px';     // Space from the bottom
-            beware.style.left = '50%';        // Center horizontally
-            beware.style.transform = 'translateX(-50%)'; // Adjust position back to center
-            beware.style.backgroundColor = 'rgba(255, 0, 0, 0.8)'; // Semi-transparent red background
-            beware.style.color = 'white';     // White text color
-            beware.style.padding = '10px 20px'; // Padding for aesthetics
-            beware.style.borderRadius = '5px'; // Rounded corners
-            beware.style.zIndex = '1000';     // Ensure it's above other elements
-            beware.style.display = 'block';    // Show the message
-            beware.innerText = "You have searched 2 locations. Head back before it's too dark!";
-
-        }
+        handleLocationSelect('skull');
     };
-    // Making Ghost Cave Button
-    caveButton.style.display = 'block';
+    
     caveButton.onclick = function() {
-        // Checks count and depending on, updates energy count and images
-        count = count + 1;
-        // Cave will be visted on the report
-        reportVariables.caveLocation = true;
-        if(count === 1){
-            // Cross out Cave Image
-            ghostLightCaveImage.src = 'images/cross.jpeg';
-            caveButton.style.display = 'none';
-            energyPointsElement.style.display = 'block';
-            energyPointsElement.innerText = reportVariables.energyAfterLocation1;
-            // Update message regarding ghost cave
-            storyText.innerText = storyText.innerText = "You decide to visit the cave but soon realize that it's extremely unsafe. " +
-                "You almost get killed by a ghost and promise yourself to never return!";
-            storyText.style.color = "blue";
-        }
-        if(count === 2){
-            // cross out Cave Image
-            ghostLightCaveImage.src = 'images/cross.jpeg';
-            caveButton.style.display = 'none';
-            energyPointsElement.style.display = 'block';
-            energyPointsElement.innerText = reportVariables.energyAfterLocation2;
-            // Update the Text of Cave Image
-            storyText.innerText = storyText.innerText = "You decide to visit the cave but soon realize that it's extremely unsafe. " +
-                "You almost get killed by a ghost and promise yourself to never return!";
-            storyText.style.color = "blue";
-            // A warning is displayed telling user to turn back
-            beware.style.position = 'fixed'; // Fixed position to stay at the bottom
-            beware.style.bottom = '90px';     // Space from the bottom
-            beware.style.left = '50%';        // Center horizontally
-            beware.style.transform = 'translateX(-50%)'; // Adjust position back to center
-            beware.style.backgroundColor = 'rgba(255, 0, 0, 0.8)'; // Semi-transparent red background
-            beware.style.color = 'white';     // White text color
-            beware.style.padding = '10px 20px'; // Padding for aesthetics
-            beware.style.borderRadius = '5px'; // Rounded corners
-            beware.style.zIndex = '1000';     // Ensure it's above other elements
-            beware.style.display = 'block';    // Show the message
-            beware.innerText = "You have searched 2 locations. Head back before it's too dark!";
-
-        }
+        handleLocationSelect('cave');
     };
-    // Making Forgotten Falls
-    fallsButton.style.display = 'block';
+    
     fallsButton.onclick = function() {
-        // Checks count and depending on, updates energy count and images
-        count = count + 1;
-        // Waterfall will be visted on the report
-        reportVariables.waterfallLocation = true;
-        if(count === 1){
-            // Crossing out Forgotten Falls Image
-            forgottenFallsImage.src = 'images/cross.jpeg'; // source of cross image
-            fallsButton.style.display = 'none';
-            energyPointsElement.style.display = 'block';
-            energyPointsElement.innerText = reportVariables.energyAfterLocation1;
-            // Update information regarding the waterfall
-            storyText.innerText = "You decide to visit the ginormous waterfall which disappears once in a while. You see that it has a large pond" +
-                " and is an excellent source for fresh water and fruit."
-            storyText.style.color = "green";
-        }
-        if(count === 2){
-            // Crossing out image of Forgotten Falls
-            forgottenFallsImage.src = 'images/cross.jpeg'; // source of image
-            fallsButton.style.display = 'none';
-            energyPointsElement.style.display = 'block';
-            energyPointsElement.innerText =  reportVariables.energyAfterLocation2;
-            storyText.innerText = "You decide to visit the ginormous waterfall which disappears once in a while. You see that it has a large pond" +
-                " and is an excellent source for fresh water."
-            storyText.style.color = "green";
-            // A warning message is displayed to tell user to return back
-            beware.style.position = 'fixed';
-            beware.style.bottom = '90px';     // Space from the bottom
-            beware.style.left = '50%';        // Center horizontally
-            beware.style.transform = 'translateX(-50%)'; // Adjust position back to center
-            beware.style.backgroundColor = 'rgba(255, 0, 0, 0.8)'; // Semi-transparent red background
-            beware.style.color = 'white';     // White text color
-            beware.style.padding = '10px 20px'; // Padding for aesthetics
-            beware.style.borderRadius = '5px'; // Rounded corners
-            beware.style.zIndex = '1000';     // Ensure it's above other elements
-            beware.style.display = 'block';    // Show the message
-            beware.innerText = "You have searched 2 locations. Head back before it's too dark!";
-        }
+        handleLocationSelect('falls');
     };
+    
     // Return Button is shown
     choices.innerHTML = `
-        <button id = "returnButton" onclick="choose('Return')">Return Back</button>
+        <button id="returnButton" onclick="choose('Return')">
+            <i class="fas fa-arrow-left"></i> Return Back
+        </button>
     `;
+    
+    // Show toast message
+    showToast("Choose two locations to explore");
 }
 
+// Function to handle location selection
+function handleLocationSelect(location) {
+    // Increment count for tracking selected locations
+    count++;
+    
+    // Handle first selection
+    if (count === 1) {
+        handleFirstLocationSelection(location);
+    }
+    
+    // Handle second selection
+    if (count === 2) {
+        handleSecondLocationSelection(location);
+        
+        // Show return warning
+        beware.style.display = 'block';
+        beware.innerText = "You have searched 2 locations. Head back before it's too dark!";
+    }
+}
+
+// Function to handle first location selection
+function handleFirstLocationSelection(location) {
+    // Update energy display
+    energyValue.textContent = reportVariables.energyAfterLocation1;
+    
+    // Process different locations
+    if (location === 'skull') {
+        // Mark skull rock as visited
+        reportVariables.skullLocation = true;
+        // Update UI for skull rock selection
+        skullRockImage.src = 'images/cross.jpeg';
+        skullRockButton.disabled = true;
+        skullRockButton.style.opacity = "0.5";
+        // Update story text
+        storyText.innerText = "You decide to visit the unusual rock shaped like a skull and find yourself " +
+            "surrounded with birds. You find multiple food sources such as animals and vegetables!";
+        storyText.style.color = "purple";
+    } 
+    else if (location === 'cave') {
+        // Mark cave as visited
+        reportVariables.caveLocation = true;
+        // Update UI for cave selection
+        ghostLightCaveImage.src = 'images/cross.jpeg';
+        caveButton.disabled = true;
+        caveButton.style.opacity = "0.5";
+        // Update story text
+        storyText.innerText = "You decide to visit the cave but soon realize that it's extremely unsafe. " +
+            "You almost get killed by a ghost and promise yourself to never return!";
+        storyText.style.color = "blue";
+    }
+    else if (location === 'falls') {
+        // Mark waterfall as visited
+        reportVariables.waterfallLocation = true;
+        // Update UI for waterfall selection
+        forgottenFallsImage.src = 'images/cross.jpeg';
+        fallsButton.disabled = true;
+        fallsButton.style.opacity = "0.5";
+        // Update story text
+        storyText.innerText = "You decide to visit the ginormous waterfall which disappears once in a while. You see that it has a large pond" +
+            " and is an excellent source for fresh water and fruit.";
+        storyText.style.color = "green";
+    }
+    
+    // Show toast for first location
+    showToast("Energy reduced to " + reportVariables.energyAfterLocation1 + ". Choose one more location.");
+}
+
+// Function to handle second location selection
+function handleSecondLocationSelection(location) {
+    // Update energy display
+    energyValue.textContent = reportVariables.energyAfterLocation2;
+    
+    // Process different locations
+    if (location === 'skull') {
+        // Mark skull rock as visited
+        reportVariables.skullLocation = true;
+        // Update UI for skull rock selection
+        skullRockImage.src = 'images/cross.jpeg';
+        skullRockButton.disabled = true;
+        skullRockButton.style.opacity = "0.5";
+        // Update story text
+        storyText.innerText = "You decide to visit the unusual rock shaped like a skull and find yourself " +
+            "surrounded with birds. You find multiple food sources such as animals and vegetables!";
+        storyText.style.color = "purple";
+    } 
+    else if (location === 'cave') {
+        // Mark cave as visited
+        reportVariables.caveLocation = true;
+        // Update UI for cave selection
+        ghostLightCaveImage.src = 'images/cross.jpeg';
+        caveButton.disabled = true;
+        caveButton.style.opacity = "0.5";
+        // Update story text
+        storyText.innerText = "You decide to visit the cave but soon realize that it's extremely unsafe. " +
+            "You almost get killed by a ghost and promise yourself to never return!";
+        storyText.style.color = "blue";
+    }
+    else if (location === 'falls') {
+        // Mark waterfall as visited
+        reportVariables.waterfallLocation = true;
+        // Update UI for waterfall selection
+        forgottenFallsImage.src = 'images/cross.jpeg';
+        fallsButton.disabled = true;
+        fallsButton.style.opacity = "0.5";
+        // Update story text
+        storyText.innerText = "You decide to visit the ginormous waterfall which disappears once in a while. You see that it has a large pond" +
+            " and is an excellent source for fresh water.";
+        storyText.style.color = "green";
+    }
+    
+    // Show toast for second location
+    showToast("Energy reduced to " + reportVariables.energyAfterLocation2 + ". Time to return to camp!");
+}
+
+// Function to setup the evening page
 function setupEveningPage(){
     // Play levelup 4 sound
-    levelUpSound4.play();
-    //Hide all buttons and images of the locations
-    forgottenFallsImage.style.display = 'none';
-    skullRockButton.style.display = 'none';
-    skullRockImage.style.display = 'none';
-    fallsButton.style.display = 'none';
+    playSound(levelUpSound4);
+    
+    //Hide all location elements
+    locationContainer.style.display = 'none';
     beware.style.display = 'none';
-    caveButton.style.display = 'none';
-    ghostLightCaveImage.style.display = 'none';
+    
     // Change title of the page
     storyTitle.innerText = 'Evening #1'
-    storyText.style.color = "black";
+    storyText.style.color = "var(--text-color)";
+    
     // Create a list of different types of shelters
     storyText.innerHTML = `
     <p>After reaching your campsite you decide to make camp. You can make 3 types of shelters: Small, Medium, and Large
     with their respective advantages. Choose extremely carefully. Your life depends on it!</p>
     <ul id = "types_of_shelters">
-            <li>Small: Lightweight, requires fewer materials, and better insulation in cold </li>
-            <li>Medium: Storage Space, stronger, and suitable for long trips</li>
-            <li>Large: Ample space for large groups, standing space, and durable in harsh conditions</li>
+            <li><i class="fas fa-home"></i> Small: Lightweight, requires fewer materials, and better insulation in cold </li>
+            <li><i class="fas fa-warehouse"></i> Medium: Storage Space, stronger, and suitable for long trips</li>
+            <li><i class="fas fa-building"></i> Large: Ample space for large groups, standing space, and durable in harsh conditions</li>
         </ul>
     `
     // Creating an image of "building a shelter"
     survivalImage.src = 'images/buildingShelter.jpeg';
+    survivalImage.style.display = 'block';
+    
     // Animating the Image
     survivalImage.animate(
         [
@@ -941,27 +612,43 @@ function setupEveningPage(){
             fill: 'forwards'   // Keeps the final state after animation
         }
     );
-    survivalImage.style.width = '200px';
+    
     // Giving user three types of building to user from
     choices.innerHTML = `
-        <button onclick="choose('smallShelter')" style="margin-right: 10px;">Small</button>
-        <button onclick="choose('mediumShelter')" style="margin-right: 10px;">Medium</button>
-        <button onclick="choose('largeShelter')">Large</button>
+        <button onclick="choose('smallShelter')" style="margin-right: 10px;">
+            <i class="fas fa-home"></i> Small
+        </button>
+        <button onclick="choose('mediumShelter')" style="margin-right: 10px;">
+            <i class="fas fa-warehouse"></i> Medium
+        </button>
+        <button onclick="choose('largeShelter')">
+            <i class="fas fa-building"></i> Large
+        </button>
     `;
+    
+    // Show toast message
+    showToast("Choose a shelter to build for the night");
 }
 
+// Function to setup the fire page
 function setupFirePage(){
     // Build a fire on the report will be true
     reportVariables.buildAFire = true;
-    // PLay a new Sound;
-    levelUpSound3.play();
+    
+    // Play a new Sound;
+    playSound(levelUpSound3);
+    
     // Update Title
     storyTitle.innerText = 'Ignition';
+    
     // Update Text
     storyText.innerText = 'You decided to create a fire with a wood and a lighter. Please click "Build Fire" for ' +
         'ignition';
+    
     // Update Image;
     survivalImage.src = 'images/ignition.jpeg';
+    survivalImage.style.display = 'block';
+    
     // Adding animations to that image
     survivalImage.animate(
         [
@@ -974,18 +661,28 @@ function setupFirePage(){
             fill: 'forwards'   // Keeps the final state after animation
         }
     );
+    
     // Giving user the choice to build a fire
     choices.innerHTML = `
-        <button onclick="choose('buildFire')">Build A Fire</button>
+        <button onclick="choose('buildFire')">
+            <i class="fas fa-fire"></i> Build A Fire
+        </button>
     `;
+    
+    // Show toast message
+    showToast("Ready to ignite the fire");
 }
 
+// Function to setup the build fire page
 function setupBuildFirePage(){
     storyTitle.innerText = 'Ignition';
+    
     // Display the sound of a build happening
-    fireSound.play();
+    playSound(fireSound);
+    
     // Update Image
     survivalImage.src = 'images/fire.jpeg';
+    
     // Animating the image
     survivalImage.animate(
         [
@@ -998,23 +695,33 @@ function setupBuildFirePage(){
             fill: 'forwards'   // Keeps the final state after animation
         }
     );
+    
     // Changing energy points
-    energyPointsElement.style.display = 'block';
-    energyPointsElement.innerText = reportVariables.energyAfterFire;
+    energyValue.textContent = reportVariables.energyAfterFire;
+    
     // Changing Text to congratulate the user
     storyText.innerText = 'Wow! That is an amazing fire! You used ' + (50 - randomNum3) + ' energy points. Head back before it is too dark.';
+    
     // Telling user to return back to the camp - site
     choices.innerHTML = `
-        <button onclick="choose('Return')">Return Back</button>
+        <button onclick="choose('Return')">
+            <i class="fas fa-arrow-left"></i> Return Back
+        </button>
     `;
+    
+    // Show toast message
+    showToast("Fire built successfully! Energy reduced to " + reportVariables.energyAfterFire);
 }
 
+// Function to setup the shelter
 function setupShelter(shelterImageSrc, shelterType){
     // play a different sound
-    levelUpSound5.play();
-    // Update the image to an image of a small shelter
+    playSound(levelUpSound5);
+    
+    // Update the image to an image of a shelter
     survivalImage.src = shelterImageSrc;
     reportVariables.shelterType = shelterType;
+    
     // Animate the image
     survivalImage.animate(
         [
@@ -1027,34 +734,51 @@ function setupShelter(shelterImageSrc, shelterType){
             fill: 'forwards'   // Keeps the final state after animation
         }
     );
+    
     // Styling the Image
     survivalImage.style.width = '300px';  // Set the desired width
     survivalImage.style.height = 'auto';  // Maintain aspect ratio            
-    shelterMessage.style.display = 'block'; // Hide the message of the shelter
-    energyPointsElement.style.display = 'block'; // Make energy points 0
-    energyPointsElement.innerText = '0';
-    choices.style.display = 'none';         // Block Buttons on Bottom
+    
+    // Show shelter message
+    shelterMessage.style.display = 'block';
+    
+    // Update energy
+    energyValue.textContent = '0';
+    
+    // Hide choices
+    choices.style.display = 'none';
+    
+    // Show toast message
+    showToast("Building " + shelterType + "...");
+    
     // Go to Night Time page automatically
     setTimeout(() => {
         nightTime();  // Call the function after 3 seconds
     }, 3000);
 }
 
+// Function to setup the night time
 function nightTime() {
     // play nighttime sound
-    nightSound.play();
+    playSound(nightSound);
+    
     // increase night counter to track # of nights
     nightCounter++;
     reportVariables.nightCount++;
+    
     // Change title
     storyTitle.innerText = 'Night #' + nightCounter;
+    
     // Change text
     storyText.innerText = 'You reached 0 energy points. You are extremely tired from all the ' +
-        'activities you have done. You decide to sleep. Hope you can survive the next day'
-    // Hide shelter image
+        'activities you have done. You decide to sleep. Hope you can survive the next day';
+    
+    // Hide shelter message
     shelterMessage.style.display = 'none';
+    
     // Display Night Image
     survivalImage.src = 'images/nightOne.jpeg';
+    
     // Animate the Image
     survivalImage.animate(
         [
@@ -1066,26 +790,36 @@ function nightTime() {
             easing: 'ease-in', // Animation easing type
             fill: 'forwards'   // Keeps the final state after animation
         }
-
     );
+    
     // Give user the option to start next day
-    choices.style.display = 'block';
+    choices.style.display = 'flex';
     choices.innerHTML = `
-            <button onclick="choose('nextDay')" style="display: block; margin: 0 auto;">Next Day</button>
-        `;
+        <button onclick="choose('nextDay')">
+            <i class="fas fa-sun"></i> Next Day
+        </button>
+    `;
+    
+    // Show toast message
+    showToast("Night has fallen. Rest until morning...");
 }
 
+// Function to setup the next day page
 function setupNextDayPage(){
     // play sound
-    levelUpSound6.play();
+    playSound(levelUpSound6);
+    
     // Update title
     storyTitle.innerText = 'The Choice';
+    
     // Update text
     storyText.innerText = 'The next morning you see a ship passing by and suddenly realize that ' +
         'you need to think of rescue strategies. You only have ' + randomNum4 + ' energy points since you are ' +
         'tired from yesterday. Choose with caution. Only one works!';
+    
     // Update image
     survivalImage.src = 'images/shipPassing.jpeg';
+    
     // Animate Image
     survivalImage.animate(
         [
@@ -1098,30 +832,42 @@ function setupNextDayPage(){
             fill: 'forwards'   // Keeps the final state after animation
         }
     );
+    
     // Set Energy Points to 30
-    energyPointsElement.style.display = 'block';
-    energyPointsElement.innerText = reportVariables.energyAfterNight;
+    energyValue.textContent = reportVariables.energyAfterNight;
+    
+    // Create choice buttons
     choices.innerHTML = `
-        <div style="display: flex; justify-content: center;"> 
-            <button style="margin-right: 15px;" onclick="choose('shipAttention')">Get Ship's Attention</button> 
-            <button onclick="choose('helpOnSand')">Write HELP on sand</button> 
-        </div>
+        <button style="margin-right: 15px;" onclick="choose('shipAttention')">
+            <i class="fas fa-flag-checkered"></i> Get Ship's Attention
+        </button> 
+        <button onclick="choose('helpOnSand')">
+            <i class="fas fa-pen"></i> Write HELP on Sand
+        </button> 
     `;
+    
+    // Show toast message
+    showToast("A ship is passing by! How will you signal for help?");
 }
 
+// Function to setup the ship attention page
 function setupShipAttentionPage(){
     // Play the failure sound since user didn't escape
-    failureSound.play();
+    playSound(failureSound);
+    
     // Change Title
     storyTitle.innerText = 'Failure!';
-    reportVariables.shipEscape = "True";
+    reportVariables.shipEscape = true;
     reportVariables.failureCount++;
+    
     // Change Text
     storyText.innerText = 'You and your friends try to wave at the ship as it is your last ' +
         'hope to escape. Sadly the ship does not see you. You run out of food and you fail to ' +
         'escape the island';
+    
     // Change Image
     survivalImage.src = 'images/shipFailure.jpeg';
+    
     // Change animation of Image
     survivalImage.animate(
         [
@@ -1134,34 +880,45 @@ function setupShipAttentionPage(){
             fill: 'forwards'   // Keeps the final state after animation
         }
     );
+    
     // Set Energy Points to 0
-    energyPointsElement.style.display = 'block';
-    energyPointsElement.innerText = '0';
+    energyValue.textContent = '0';
+    
+    // Show toast message
+    showToast("The ship didn't see you! Your attempt failed...");
+    
+    // Display failure message after delay
     setTimeout(() => {
         // Display a failure message
-        failureMessage.style.display = 'block'  // Call the function after 2 seconds
+        failureMessage.style.display = 'block';
     }, 2000);
+    
     // Make a re-try button for user to attempt to escape
     choices.innerHTML = `
-        <div style="text-align: center;">
-            <button onclick="choose('reTry')">Re-Try</button>
-        </div>
+        <button onclick="choose('reTry')">
+            <i class="fas fa-redo"></i> Try Again
+        </button>
     `;
 }
 
+// Function to setup the success page
 function setupSuccessPage(){
     // Play success sound
-    successSound.play();
+    playSound(successSound);
+    
     // Change title
     storyTitle.innerText = 'Success!';
     reportVariables.helpEscape = true;
     reportVariables.success = true;
+    
     // Change text
     storyText.innerText = 'You and your friends write "Help" with a stick since you know the ship wont see you. ' +
         'Luckily this works, and hours later a helicopter arrives to get you rescued. It had been a harsh 2 days ' +
         'but you made it!';
+    
     // Change Image
     survivalImage.src = 'images/helicopter.jpeg';
+    
     // Animate the Image above
     survivalImage.animate(
         [
@@ -1174,34 +931,41 @@ function setupSuccessPage(){
             fill: 'forwards'   // Keeps the final state after animation
         }
     );
+    
     // Set energy points to 0
-    energyPointsElement.style.display = 'block';
-    energyPointsElement.innerText = '0';
-    // Display a success message
-    setTimeout(() => { //bugbug -- with report page, this shows on report page also ...
-        successMessage.style.display = 'block'  // Call the function after 2 seconds
+    energyValue.textContent = '0';
+    
+    // Show toast message
+    showToast("Congratulations! You've been rescued!");
+    
+    // Display a success message after delay
+    setTimeout(() => {
+        successMessage.style.display = 'block';
     }, 2000);
+    
     // Show option for report
     choices.innerHTML = `
-        <div style="text-align: center;">
-            <button onclick="choose('report')">Report</button>
-        </div>
+        <button onclick="choose('report')">
+            <i class="fas fa-file-alt"></i> View Report
+        </button>
     `;
 }
 
+// Function to setup the report page
 function setupReportPage(){
     // Elements from previous pages are hidden
-    storyTitle.innerText = 'Report!';
-    energyPointsElement.style.display = 'none';
-    energyImage.style.display = 'none';
+    storyTitle.innerText = 'Survival Report';
+    energyDisplay.style.display = 'none';
     successMessage.style.display = 'none';
     survivalImage.style.display = 'none';
-    choices.style.display='none';
+    choices.style.display = 'none';
     helpButton.style.display = 'none';
+    
     // Sound is played
-    levelUpSound1.play();
+    playSound(levelUpSound1);
+    
     // Export Button is shown
-    exportButton.style.display = 'block';
+    exportButton.style.display = 'flex';
 
     // Report messages that will be displayed on help page
     let locationReportMessage = "";
@@ -1212,6 +976,7 @@ function setupReportPage(){
     let helpEscapeReportMessage = "";
 
     nightReportMessage = "Energy after the Night State: " + reportVariables.energyAfterNight;
+    
     // If island is explored, report gets updated and report data gets input
     if(reportVariables.exploreIsland){
         if(reportVariables.skullLocation && reportVariables.waterfallLocation){ // User visited Skull Rock and Waterfall
@@ -1227,7 +992,7 @@ function setupReportPage(){
                 { Activity: "Call for Help: Helicopter", Energy: 0},
                 { Activity: "End of Journey", Energy: 0}
             ];
-        } else if(reportVariables.waterfallLocation && reportVariables.caveLocation){ // User visited Watefall and Cave
+        } else if(reportVariables.waterfallLocation && reportVariables.caveLocation){ // User visited Waterfall and Cave
             locationReportMessage = "Explored the island: True\nLocations Visited: Forgotten Falls and Ghost Cave\n\tEnergy after location 1: " + reportVariables.energyAfterLocation1 + "\n\tEnergy after location 2: " + reportVariables.energyAfterLocation2;
             reportData = [
                 { Activity: "Start of Journey", Energy: 50},
@@ -1294,37 +1059,155 @@ function setupReportPage(){
 
     // Story - Text is changes to display the report messages on screen
     storyText.innerHTML = `
-    <ul class="report-list">
-        <li><pre>Energy at Start: 50</pre></li>
-        <li><pre>${locationReportMessage}</pre></li>
-        <li><pre>${buildFireReportMessage}</pre></li>
-        <li><pre>${shelterReportMessage}</pre></li>
-        <li><pre>${nightReportMessage}</pre></li>
-        <li><pre>${shipEscapeReportMessage}</pre></li>
-        <li><pre>${helpEscapeReportMessage}</pre></li>
-        <li><pre>Energy at end: 0</pre></li>
-    </ul>
-`;
+    <div class="report-container">
+        <h1><i class="fas fa-clipboard-list"></i> Survival Report</h1>
+        <ul class="report-list">
+            <li><pre><i class="fas fa-bolt"></i> Energy at Start: 50</pre></li>
+            <li><pre><i class="fas fa-compass"></i> ${locationReportMessage}</pre></li>
+            <li><pre><i class="fas fa-fire"></i> ${buildFireReportMessage}</pre></li>
+            <li><pre><i class="fas fa-home"></i> ${shelterReportMessage}</pre></li>
+            <li><pre><i class="fas fa-moon"></i> ${nightReportMessage}</pre></li>
+            <li><pre><i class="fas fa-ship"></i> ${shipEscapeReportMessage}</pre></li>
+            <li><pre><i class="fas fa-helicopter"></i> ${helpEscapeReportMessage}</pre></li>
+            <li><pre><i class="fas fa-battery-empty"></i> Energy at end: 0</pre></li>
+        </ul>
+        <div id="choices" style="display: block; margin-top: 20px;">
+            <button onclick="choose('Restart')">
+                <i class="fas fa-redo"></i> Play Again
+            </button>
+        </div>
+    </div>`;
+    
+    // Show toast message
+    showToast("View your survival report! Click Export to save as Excel.");
 }
 
+// Function to restart the game
 function restartGame(){
     // Hide success message
     successMessage.style.display = 'none';
     // Play a sound
-    levelUpSound1.play();
+    playSound(levelUpSound1);
+    // Reset game state
+    count = 0;
+    nightCounter = 0;
+    gameProgress = 0;
+    
+    // Reset report variables
+    reportVariables = {
+        helpCount: 0,
+        exploreIsland: false,
+        buildAFire: false,
+        skullLocation: false,
+        waterfallLocation: false,
+        caveLocation: false,
+        energyStart: 50,
+        energyAfterLocation1: Math.floor(Math.random() * 6) + 30,
+        energyAfterLocation2: Math.floor(Math.random() * 6) + 20,
+        energyAfterFire: Math.floor(Math.random() * 6) + 25,
+        shelterType: "",
+        energyAfterShelter: 0,
+        nightCount: 0,
+        energyAfterNight: Math.floor(Math.random() * 16) + 20,
+        shipEscape: false,
+        failureCount: 0,
+        helpEscape: false,
+        success: false,
+        energyEnd: 0
+    };
+    
+    // Reset report data
+    reportData = [];
+    
+    // Show toast message
+    showToast("Restarting game...");
+    
     // Go back to the first page of the program
     window.location.href = 'index.html';
 }
 
+// Function to handle help button click
+function helpButtonClick(){
+    reportVariables.helpCount++;
+
+    // Store current game state in session storage
+    sessionStorage.setItem("currentPage", currentPage);
+    sessionStorage.setItem("darkMode", darkMode);
+    sessionStorage.setItem("audioEnabled", audioEnabled);
+    sessionStorage.setItem("energyValue", energyValue.textContent);
+    sessionStorage.setItem("reportVariables", JSON.stringify(reportVariables));
+    
+    // Hide UI elements
+    energyDisplay.style.display = 'none';
+    
+    // Show toast message
+    showToast("Going to help page...");
+    
+    // Navigate to help page
+    window.location.href = 'helpPage.html';    
+}
+
+// Event Listener to load the instructions page when back is clicked from help page
+window.addEventListener("load", function() {
+    // Check for dark mode preference
+    const darkModePref = localStorage.getItem('darkMode') === 'true';
+    if (darkModePref) {
+        document.body.classList.add('dark-mode');
+        if (document.getElementById('dark-mode-toggle')) {
+            document.getElementById('dark-mode-toggle').checked = true;
+        }
+        darkMode = true;
+    }
+    
+    // Check for audio preference
+    if (document.getElementById('audio-toggle')) {
+        document.getElementById('audio-toggle').checked = audioEnabled;
+    }
+    
+    // Check if returning from help page
+    if (sessionStorage.getItem("returnFromHelp") === "true") {
+        // Restore game state
+        currentPage = sessionStorage.getItem("currentPage");
+        darkMode = sessionStorage.getItem("darkMode") === "true";
+        audioEnabled = sessionStorage.getItem("audioEnabled") === "true";
+        
+        // Update energy value if it exists
+        if (sessionStorage.getItem("energyValue")) {
+            energyValue.textContent = sessionStorage.getItem("energyValue");
+        }
+        
+        // Restore report variables
+        if (sessionStorage.getItem("reportVariables")) {
+            reportVariables = JSON.parse(sessionStorage.getItem("reportVariables"));
+        }
+        
+        // Remove temporary session data
+        sessionStorage.removeItem("returnFromHelp");
+        sessionStorage.removeItem("currentPage");
+        sessionStorage.removeItem("darkMode");
+        sessionStorage.removeItem("audioEnabled");
+        sessionStorage.removeItem("energyValue");
+        sessionStorage.removeItem("reportVariables");
+        
+        // Go back to the page from where help was clicked
+        choose(currentPage);
+    }
+});
+
+// Function to setup speech recognition for voice commands
 function setupSpeechRecognition(){
+    // Show toast message
+    showToast("Voice recognition activated. Speak a command...");
+    
     // Get the SpeechRecognition interface
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
+    // Create a new recognition instance
     const recognition = new SpeechRecognition();
 
     // Set properties
     recognition.lang = 'en-US'; // Language
-    recognition.continuous = true; // Keep listening
+    recognition.continuous = false; // Stop after one command
     recognition.interimResults = false; // Final results only
 
     // Start recognition
@@ -1333,97 +1216,148 @@ function setupSpeechRecognition(){
     // Handle recognition results
     recognition.onresult = (event) => {
         const transcript = event.results[event.results.length - 1][0].transcript.trim();
-        var command = transcript.trim().toLowerCase();
-        console.log("You said: $%s$", command);
+        const command = transcript.trim().toLowerCase();
+        console.log("Voice command detected: " + command);
+        
+        // Show detected command
+        showToast("Command detected: " + command);
 
-        // For each text detected, it would transition to that page;
-        switch(command){
-            case 'stop':
-                restartGame();
-                break;
-            case 'begin':
-                choose('begin');
-                break;
-            case 'continue':
-                choose('continue')
-                break;
-            case 'explore':
-            case 'explore the island':
-                choose('Explore');
-                break;
-            case 'fire':
-                choose('Fire');
-                break;
-            case 'buildfire':
-            case 'build fire':
-                choose('buildFire');
-                break;
-            case 'returnback':
-            case 'return back':
-                choose('Return');
-                break;
-            case 'small':
-                choose('smallShelter');
-                break;
-            case 'medium':
-                choose('mediumShelter');
-                break;
-            case 'large':
-                choose('largeShelter');
-                break;
-            case 'next day':
-            case 'nextday':
-                choose('nextDay');
-                break;
-            case 'ship':
-            case 'get ships attention':
-                choose('shipAttention');
-                break;
-            case 'retry':
-                choose('reTry');
-                break;
-            case 'help':
-                helpButtonClick();
-                break;
-            case 'write help on sand':
-                choose('helpOnSand');
-                break;
-            case 'report':
-                choose('report');
-                break;
-            case 'restart':
-                choose('Restart');
-                break;
-            default:
-                console.log("Command not recognized.");
-        }
-        //console.log("Stopping speech recognition");
-        recognition.stop();
+        // Process different voice commands
+        processVoiceCommand(command);
     };
 
     // Handle errors
     recognition.onerror = (event) => {
         console.error("Speech recognition error:", event.error);
+        showToast("Voice recognition error: " + event.error);
     };
 
-    // Stop recognition if needed
+    // Cleanup when recognition ends
     recognition.onend = () => {
-        //console.log("Voice recognition ended.");
+        console.log("Voice recognition ended");
     };
 }
 
-function exportToExcel(data, fileName) {
-    console.log("Inside Export function: %s", data)
+// Function to process voice commands
+function processVoiceCommand(command) {
+    // For each text detected, it would transition to that page
+    switch(command){
+        case 'stop':
+        case 'restart':
+        case 'reset':
+            restartGame();
+            break;
+        case 'begin':
+        case 'start':
+        case 'start game':
+            choose('begin');
+            break;
+        case 'continue':
+        case 'next':
+            choose('continue')
+            break;
+        case 'explore':
+        case 'explore the island':
+        case 'explore island':
+            choose('Explore');
+            break;
+        case 'fire':
+        case 'build fire':
+        case 'make fire':
+            choose('Fire');
+            break;
+        case 'build fire':
+        case 'ignite':
+        case 'light fire':
+            choose('buildFire');
+            break;
+        case 'return':
+        case 'return back':
+        case 'go back':
+            choose('Return');
+            break;
+        case 'small':
+        case 'small shelter':
+            choose('smallShelter');
+            break;
+        case 'medium':
+        case 'medium shelter':
+            choose('mediumShelter');
+            break;
+        case 'large':
+        case 'large shelter':
+            choose('largeShelter');
+            break;
+        case 'next day':
+        case 'morning':
+        case 'wake up':
+            choose('nextDay');
+            break;
+        case 'ship':
+        case 'signal ship':
+        case 'get ship attention':
+        case 'wave':
+            choose('shipAttention');
+            break;
+        case 'try again':
+        case 'retry':
+            choose('reTry');
+            break;
+        case 'help':
+        case 'help page':
+            helpButtonClick();
+            break;
+        case 'write help':
+        case 'write help on sand':
+        case 'write in sand':
+        case 'sand message':
+            choose('helpOnSand');
+            break;
+        case 'report':
+        case 'show report':
+        case 'view report':
+            choose('report');
+            break;
+        case 'dark mode':
+        case 'toggle dark mode':
+            toggleDarkMode();
+            break;
+        case 'mute':
+        case 'toggle audio':
+        case 'turn off sound':
+            if (document.getElementById('audio-toggle')) {
+                document.getElementById('audio-toggle').checked = !audioEnabled;
+                toggleAudio();
+            }
+            break;
+        default:
+            showToast("Command not recognized. Try again.");
+    }
+}
 
-    //Create a new workbook
+// Function to export data to Excel
+function exportToExcel(data, fileName) {
+    console.log("Exporting data to Excel:", data);
+
+    // Create a new workbook
     const workbook = XLSX.utils.book_new();
 
-    //Convert input data to worksheet
+    // Convert input data to worksheet
     const worksheet = XLSX.utils.json_to_sheet(data);
 
-    // Add the sheet onto the
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
+    // Add the sheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Survival Report");
 
-    // Step 3: Export the workbook to a file
+    // Style the worksheet (headers, etc.)
+    const headerStyle = {
+        font: { bold: true, color: { rgb: "FFFFFF" } },
+        fill: { fgColor: { rgb: "4CAF50" } }
+    };
+    
+    // Apply formatting (basic version since full styling requires more complex code)
+    const colWidths = [{ wch: 30 }, { wch: 10 }];
+    worksheet['!cols'] = colWidths;
+
+    // Export the workbook to a file
     XLSX.writeFile(workbook, fileName);
 }

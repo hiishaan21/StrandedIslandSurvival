@@ -4,39 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help Tab</title>
+    <!-- Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<!-- Navigation bar -->
+<div id="navbar">
+    <div id="navbar-left">
+        <h2 id="navbar-title">Island Survival - Help</h2>
+    </div>
+    <div id="navbar-right">
+        <!-- Audio toggle -->
+        <div class="toggle-container">
+            <span class="toggle-label">Audio</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="audio-toggle" checked>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <!-- Dark mode toggle -->
+        <div class="toggle-container">
+            <span class="toggle-label">Dark Mode</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="dark-mode-toggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- Progress indicator -->
+<div id="progress-indicator"></div>
+
 <!-- Main container for the help page content -->
 <div id="storyHelp-container">
-    <!-- Title of the story -->
+    <!-- Title of the help page -->
     <h1 id="helpPage-title">Help Page</h1>
-    <!-- Paragraph describing the story introduction -->
+    <!-- Paragraph describing the help section -->
     <p id="helpText">Need Help? These are five commonly asked questions that you may have.
         Click on each question to reveal the answer.</p>
+    
+    <!-- FAQ section with questions and answers -->
     <div id="faq-section">
-        <!-- FAQ questions will be added here and displayed -->
+        <!-- FAQ questions will be added here dynamically -->
     </div>
+    
+    <!-- AI Chatbot section -->
     <section id="chatbot">
-        <h3>Chat with AI</h3>
+        <h3>Chat with AI Assistant</h3>
         <div id="chat-window">
           <div id="messages"></div>
         </div>
         <div class="inputTextContainer">
-            <input type="text" id="user-input" placeholder="Ask a question..." />
+            <input type="text" id="user-input" placeholder="Ask a question about the game..." />
             <button id="send-btn">Send</button>
         </div>
     </section>
-    <!-- Container for interactive choices, such as buttons -->
+    
+    <!-- Return button container -->
     <div id="choices">
         <!-- Button that triggers a choose function when clicked -->
-        <button id = "helpReturn" onclick="choose('returnFromHelp')">Back to Story</button>
+        <button id="helpReturn" onclick="choose('returnFromHelp')">
+            <i class="fas fa-arrow-left"></i> Back to Story
+        </button>
     </div>
 </div>
 
+<!-- Toast notification -->
+<div id="notification-toast" class="toast"></div>
+
 <!-- JavaScript to generate FAQ section dynamically -->
 <script>
-
     // Define questions and answers
     const questions = [
         "What is the goal of this program?",
@@ -61,7 +104,8 @@
         questionButton.textContent = question;
         questionButton.className = 'faq-question';
         questionButton.onclick = () => {
-            // Toggle answer display on button click
+            // Toggle answer display on button click and active class
+            questionButton.classList.toggle('active');
             const answerDiv = document.getElementById(`answer-${index}`);
             answerDiv.style.display = answerDiv.style.display === 'none' ? 'block' : 'none';
         };
@@ -74,6 +118,19 @@
         // Add the question and answer to the FAQ section
         faqSection.appendChild(questionButton);
         faqSection.appendChild(answerDiv);
+    });
+    
+    // Check for dark mode preference
+    const darkModePref = localStorage.getItem('darkMode') === 'true';
+    if (darkModePref) {
+        document.body.classList.add('dark-mode');
+        document.getElementById('dark-mode-toggle').checked = true;
+    }
+    
+    // Event listener for dark mode toggle
+    document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
     });
 </script>
 <script src="script.js"></script>

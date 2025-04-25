@@ -5,9 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Sets the title of the web page, shown on the browser tab -->
     <title>Survival Challenge</title>
+    <!-- Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<!-- Navigation bar -->
+<div id="navbar">
+    <div id="navbar-left">
+        <h2 id="navbar-title">Island Survival</h2>
+    </div>
+    <div id="navbar-right">
+        <!-- Audio toggle -->
+        <div class="toggle-container">
+            <span class="toggle-label">Audio</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="audio-toggle" checked>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <!-- Dark mode toggle -->
+        <div class="toggle-container">
+            <span class="toggle-label">Dark Mode</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="dark-mode-toggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- Progress indicator -->
+<div id="progress-indicator"></div>
+
+<!-- Energy display component -->
+<div id="energy-display" style="display: none;">
+    <img id="energy-icon" src="images/energy.jpeg" alt="Energy">
+    <span id="energy-value">50</span>
+</div>
+
+<!-- Floating control buttons -->
+<div class="floating-controls">
+    <button id="help-button" class="floating-control" style="display: none;" title="Help">
+        <img src="images/question.jpeg" alt="Help">
+    </button>
+    <button id="restart-button" class="floating-control" style="display: none;" title="Restart">
+        <img src="images/stop.jpeg" alt="Restart">
+    </button>
+    <button id="voice-button" class="floating-control" style="display: none;" title="Voice Control">
+        <img src="images/mic.webp" alt="Voice Control">
+    </button>
+    <button id="export-button" class="floating-control" style="display: none;" title="Export Data">
+        <img src="images/exportfinal.webp" alt="Export">
+    </button>
+</div>
+
 <!-- Main container for the story content -->
 <div id="story-container">
     <!-- Title of the story -->
@@ -28,6 +84,31 @@
         <button id="button1" onclick="choose('instruct')">Instructions</button>
     </div>
 </div>
+
+<!-- Toast notification -->
+<div id="notification-toast" class="toast"></div>
+
+<!-- Game messages containers -->
+<div id="shelter-message" class="game-message" style="display: none;">Great Choice. This shelter will be the key to your success in the future</div>
+<div id="success-message" class="game-message success-message" style="display: none;">You have escaped the island! Good luck on your journey ahead!</div>
+<div id="failure-message" class="game-message failure-message" style="display: none;">You have failed to escape the island. Tough Luck</div>
+
+<!-- Location images and buttons that will be added dynamically -->
+<div id="location-images" class="location-container" style="display: none;">
+    <div class="location" id="skull-rock-location">
+        <img id="skull-rock-image" src="images/skullrock.jpeg" alt="Skull Rock">
+        <button id="skull-rock-button">Skull Rock</button>
+    </div>
+    <div class="location" id="ghost-cave-location">
+        <img id="ghost-light-cave-image" src="images/ghostlightcave.jpeg" alt="Ghost Cave">
+        <button id="cave-button">Ghost Cave</button>
+    </div>
+    <div class="location" id="forgotten-falls-location">
+        <img id="forgotten-falls-image" src="images/forgottenfalls.jpeg" alt="Forgotten Falls">
+        <button id="falls-button">Forgotten Falls</button>
+    </div>
+</div>
+
 <script src="libs/xlsx.full.min.js"></script>
 <script src="script.js" defer></script>
 </body>
