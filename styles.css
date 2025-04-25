@@ -1,93 +1,151 @@
 /* General body styling */
 body {
-    font-family: Arial, sans-serif; /* Sets the primary font for the page */
-    background-color: #e0f7fa; /* Light blue background for the entire page */
-    color: #333; /* Dark gray text color */
+    font-family: 'Montserrat', 'Arial', sans-serif; /* Modern font family */
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); /* Deep purple gradient background */
+    background-attachment: fixed; /* Keep background fixed when scrolling */
+    color: #e0e0e0; /* Light text for dark background */
     padding: 20px; /* Adds padding around the body */
+    margin: 0;
+    min-height: 100vh;
+    line-height: 1.6;
 }
 
 /* Container for the story content */
 #story-container {
-    background-color: white; /* White background for contrast */
-    border-radius: 8px; /* Rounded corners for a soft look */
-    padding: 20px; /* Adds padding inside the container */
-    max-width: 600px; /* Limits width for better readability */
-    margin: 0 auto; /* Centers the container */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+    background: rgba(20, 20, 30, 0.7); /* Semi-transparent dark background */
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari */
+    border-radius: 16px; /* Rounded corners for a modern look */
+    padding: 30px; /* More padding for breathing space */
+    max-width: 650px; /* Slightly wider for better readability */
+    margin: 40px auto; /* Centers the container with more vertical space */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Deeper shadow for depth */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for glassmorphism */
     animation: fadeIn 1.5s ease-in-out; /* Fades in the container */
 }
 
 /* Styling for the story title */
 #story-title {
-    font-size: 2.6em; /* Large font size for emphasis */
-    font-weight: bold; /* Makes text bold */
+    font-size: 2.8em; /* Larger font size for emphasis */
+    font-weight: 700; /* Bold text */
     text-align: center; /* Centers the title */
-    color: #e67e22; /* Orange color for visibility */
-    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
-    margin: 10px 0; /* Spacing around the title */
-    font-family: 'Arial', sans-serif; /* Sets specific font */
-    letter-spacing: 1px; /* Adds spacing between letters */
+    color: #ff9f43; /* Warmer orange color */
+    text-shadow: 0 0 10px rgba(255, 159, 67, 0.5); /* Glowing text effect */
+    margin: 10px 0 25px; /* More bottom margin */
+    font-family: 'Cinzel', 'Arial', serif; /* Cinematic font */
+    letter-spacing: 2px; /* More spacing between letters */
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b); /* Gradient text */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* Main text styling within the story container */
 #story-text {
-    font-size: 1.1em; /* Slightly larger font for readability */
+    font-size: 1.2em; /* Larger font for readability */
     text-align: center; /* Centers the text */
-    color: black; /* Black color for text */
-    font-family: 'Georgia', serif; /* Different font for a formal look */
-    line-height: 1.5; /* Spacing between lines */
-    margin: 15px 20px; /* Adds margin around the text */
+    color: #e0e0e0; /* Light text for dark background */
+    font-family: 'Lora', 'Georgia', serif; /* Elegant serif font */
+    line-height: 1.7; /* More spacing between lines */
+    margin: 25px 20px; /* More margin around the text */
     max-width: 600px; /* Limits width for readability */
-    opacity: 0.85; /* Slightly faded for aesthetic effect */
+    opacity: 0.95; /* Slightly more visible */
+    letter-spacing: 0.5px; /* Slight spacing for readability */
 }
 
 /* Warning text styling */
 #beware {
-    font-size: 1em; /* Regular font size */
+    font-size: 1.1em; /* Slightly larger font size */
     text-align: center; /* Centers the warning text */
-    color: #B22222; /* Red color for emphasis */
-    font-weight: bold; /* Makes text bold */
-    font-family: 'Verdana', sans-serif; /* Different font for distinct styling */
+    color: #ff6b6b; /* Vibrant red that works on dark backgrounds */
+    font-weight: 600; /* Semibold text */
+    font-family: 'Montserrat', sans-serif; /* Consistent with main font */
     letter-spacing: 1px; /* Spacing between letters */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Adds shadow */
-    margin-top: 10px; /* Spacing above the text */
-    opacity: 0.9; /* Slightly transparent */
+    text-shadow: 0 0 8px rgba(255, 107, 107, 0.6); /* Glowing effect */
+    margin: 15px 0; /* More vertical spacing */
+    padding: 10px; /* Add padding */
+    background: rgba(255, 107, 107, 0.1); /* Subtle background */
+    border-left: 3px solid #ff6b6b; /* Left accent border */
+    border-radius: 4px; /* Slight rounding */
 }
 
 /* Image styling */
 img {
     max-width: 100%; /* Ensures image is responsive */
-    border-radius: 8px; /* Rounds the corners */
+    border-radius: 12px; /* More rounded corners */
     display: block; /* Centers the image in container */
     width: 70%; /* Limits width */
-    margin: 20px auto; /* Centers and adds margin */
-    border: 3px solid #f39c12; /* Orange border for emphasis */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Adds shadow for depth */
-    animation: zoomIn 1s ease-in-out; /* Zooms in image */
+    margin: 25px auto; /* Increased vertical margin */
+    border: 2px solid rgba(255, 159, 67, 0.6); /* Transparent orange border */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 159, 67, 0.3); /* Cinematic glow */
+    animation: zoomIn 1.2s ease-in-out; /* Smoother zoom animation */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transitions */
+}
+
+img:hover {
+    transform: scale(1.02); /* Subtle zoom on hover */
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), 0 0 18px rgba(255, 159, 67, 0.4); /* Enhanced glow */
 }
 
 /* Styling for credentials text */
 #credentials {
-    font-size: 0.9em; /* Small font size */
-    color: black; /* Black color */
+    font-size: 0.95em; /* Slightly larger */
+    color: rgba(224, 224, 224, 0.8); /* Light gray with transparency */
     font-style: italic; /* Italicizes text */
     line-height: 1.6; /* Adds line height */
     text-align: center; /* Centers the text */    
-    margin-bottom: 15px; /* Adds bottom margin */
+    margin: 20px 0; /* More vertical margin */
+    padding: 10px; /* Add padding */
+    background: rgba(255, 255, 255, 0.05); /* Very subtle background */
+    border-radius: 8px; /* Rounded corners */
+    backdrop-filter: blur(4px); /* Subtle glass effect */
+    -webkit-backdrop-filter: blur(4px); /* For Safari */
 }
 
 /* Button styling */
 button {
     border: none; /* Removes border */
     cursor: pointer; /* Changes cursor to pointer on hover */
-    background-color: #f39c12; /* Orange background color */
-    color: #2c3e50; /* Dark blue text color */
-    padding: 15px 30px; /* Adds padding inside the button */
-    font-size: 1.1em; /* Increases font size */
-    font-weight: bold; /* Makes text bold */
-    border-radius: 8px; /* Rounds the corners */
-    transition: background-color 0.3s, transform 0.3s; /* Adds transition for hover effect */
-    margin-top: 1px; /* Minimal margin at top */
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b); /* Gradient background */
+    color: #1a1a2e; /* Dark text for contrast */
+    padding: 12px 28px; /* Adjusted padding */
+    font-size: 1.1em; /* Maintains font size */
+    font-weight: 600; /* Semibold text */
+    border-radius: 12px; /* More rounded corners */
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+    margin: 8px 5px; /* More even spacing */
+    box-shadow: 0 4px 15px rgba(255, 159, 67, 0.4); /* Glowing effect */
+    backdrop-filter: blur(4px); /* Subtle glass effect */
+    -webkit-backdrop-filter: blur(4px); /* For Safari */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Subtle border */
+    position: relative; /* For pseudo-element positioning */
+    overflow: hidden; /* Contains the pseudo-element */
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.7s ease;
+}
+
+button:hover {
+    transform: translateY(-3px); /* Slight lift effect */
+    box-shadow: 0 7px 20px rgba(255, 159, 67, 0.5); /* Enhanced glow */
+    background: linear-gradient(135deg, #ff9f43, #fc5c65); /* Slightly different gradient */
+}
+
+button:hover::before {
+    left: 100%; /* Animate the gradient sweep */
+}
+
+button:active {
+    transform: translateY(1px); /* Press effect */
+    box-shadow: 0 3px 10px rgba(255, 159, 67, 0.3); /* Reduced glow */
 }
 
 /* Container for choice buttons */
@@ -95,58 +153,90 @@ button {
     display: flex; /* Aligns items in a row */
     justify-content: center; /* Centers content */
     align-items: center; /* Vertically centers content */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 15px; /* Space between buttons */
+    margin: 25px 0 15px; /* More vertical space */
 }
 
-/* Hover effect for choice buttons */
-#choices button:hover {
-    background-color: #e67e22; /* Changes background color on hover */
-    transform: scale(1.1); /* Enlarges button on hover */
-}
-
-/* Fade-in animation */
+/* Animations */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
-/* Pop-up animation */
 @keyframes popUp {
     0% { transform: translateY(-20px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
 }
 
-/* Zoom-in animation */
 @keyframes zoomIn {
     0% { transform: scale(0.8); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
 }
 
-/* Styling for list of names */
-#names_list {
-    list-style-type: none; /* Removes default bullet points */
-    text-align: left; /* Aligns text to the left */
-    margin: 10px; /* Adds margin around list */
-    padding: 0; /* Removes padding */
-    font-family: Arial, sans-serif; /* Sets font */
-    font-size: 0.9em; /* Smaller font size */
-    color: #34495e; /* Dark blue color */
+@keyframes glowPulse {
+    0% { box-shadow: 0 0 10px rgba(255, 159, 67, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(255, 159, 67, 0.8); }
+    100% { box-shadow: 0 0 10px rgba(255, 159, 67, 0.5); }
 }
 
-/* Individual name list items */
-#names_list li {
-    padding: 5px; /* Adds padding inside items */
-    background-color: #f0f8ff; /* Light blue background */
-    border-left: 3px solid #3498db; /* Blue border on the left */
-    margin-bottom: 8px; /* Space between items */
-    border-radius: 4px; /* Rounds the corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds shadow */
-    transition: transform 0.2s; /* Transition for hover effect */
+/* General list styling for all list types */
+#names_list, #types_of_shelters, #instruction_list {
+    list-style-type: none;
+    text-align: left;
+    margin: 15px 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95em;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-/* Hover effect for name list items */
-#names_list li:hover {
-    transform: scale(1.01); /* Slightly enlarges on hover */
-    background-color: #eaf6ff; /* Changes background color */
+/* Styling for list items */
+#names_list li, #types_of_shelters li, #instruction_list li {
+    padding: 12px 16px;
+    background: rgba(40, 40, 60, 0.6);
+    border-left: 3px solid #ff9f43;
+    margin-bottom: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hover effect for list items */
+#names_list li:hover, #types_of_shelters li:hover, #instruction_list li:hover {
+    transform: translateY(-3px);
+    background: rgba(60, 60, 80, 0.7);
+    border-left: 3px solid #ff6b6b;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 159, 67, 0.4);
+    cursor: pointer;
+}
+
+/* Special styling for instruction list */
+#instruction_list {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+#instruction_list li {
+    width: calc(50% - 20px); /* Two columns with gap space */
+    box-sizing: border-box;
+}
+
+/* Special note in instruction list */
+#instruction_list li:last-child {
+    width: 100%;
+    font-weight: 600;
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    border-left: 4px solid #ff6b6b;
+    padding: 15px;
+    text-align: left;
 }
 
 /* Zoom-in animation class */
@@ -154,309 +244,327 @@ button {
     animation: zoomIn 1s ease-in-out; /* Applies zoom-in animation */
 }
 
-/* Styling for list of shelter types */
-#types_of_shelters {
-    list-style-type: none; /* Removes default bullet points */
-    text-align: left; /* Aligns text to the left */
-    margin: 10px; /* Adds margin around list */
-    padding: 0; /* Removes padding */
-    font-family: Arial, sans-serif; /* Sets font */
-    font-size: 0.9em; /* Smaller font size */
-    color: #34495e; /* Dark blue color */
-}
-
-/* Individual shelter type list items */
-#types_of_shelters li {
-    padding: 5px; /* Adds padding inside items */
-    background-color: #f0f8ff; /* Light blue background */
-    border-left: 3px solid #3498db; /* Blue border on the left */
-    margin-bottom: 8px; /* Space between items */
-    border-radius: 4px; /* Rounds the corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds shadow */
-    transition: transform 0.2s; /* Transition for hover effect */
-}
-
-/* Hover effect for shelter type list items */
-#types_of_shelters li:hover {
-    transform: scale(1.01); /* Slightly enlarges on hover */
-    background-color: #eaf6ff; /* Changes background color */
-}
-
-/* Styling for instruction list container */
-#instruction_list {
-    list-style-type: none; /* Removes bullet points */
-    margin: 10px; /* Adds margin around list */
-    padding: 0; /* Removes padding */
-    font-family: Arial, sans-serif; /* Sets font */
-    font-size: 0.9em; /* Smaller font size */
-    color: #34495e; /* Dark blue color */
-    display: flex; /* Flex layout */
-    flex-wrap: wrap; /* Allows items to wrap to next row */
-    gap: 10px; /* Adds space between items */
-    justify-content: flex-start; /* Aligns items to the left */
-}
-
-/* Individual instruction list items */
-#instruction_list li {
-    padding: 10px 15px; /* Adds padding */
-    background-color: #f9fdfb; /* Light green background */
-    border-left: 4px solid #4CAF50; /* Green border for standard items */
-    border-radius: 4px; /* Rounds the corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds shadow */
-    transition: transform 0.2s, background-color 0.2s; /* Adds transition for hover */
-    width: auto; /* Sets automatic width */
-    text-align: left; /* Aligns text to the left */
-}
-
-/* Hover effect for instruction list items */
-#instruction_list li:hover {
-    transform: scale(1.02); /* Slightly enlarges on hover */
-    background-color: #e8f5e9; /* Changes background color */
-    cursor: pointer; /* Changes cursor to pointer on hover */
-}
-
-/* Styling for the special note in instruction list */
-#instruction_list li:last-child {
-    font-weight: bold; /* Makes text bold */
-    color: #e53935; /* Red text color */
-    background-color: #fff5f5; /* Light red background */
-    border-left: 4px solid #e53935; /* Red border */
-    padding: 12px 15px; /* Adds padding */
-    width: 100%; /* Spans full width */
-    text-align: left; /* Aligns text to the left */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds shadow */
-}
-
-/*#storyHelp-container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-    color: #333;
-}*/
-
 #storyHelp-container {
-    background-color: white; /* White background for contrast */
-    border-radius: 8px; /* Rounded corners for a soft look */
-    padding: 20px; /* Adds padding inside the container */
-    max-width: 800px; /* Limits width for better readability */
-    margin: 0 auto; /* Centers the container */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
-    animation: fadeIn 1.5s ease-in-out; /* Fades in the container */
+    background: rgba(20, 20, 30, 0.7); /* Semi-transparent dark background */
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari */
+    border-radius: 16px; /* Rounded corners */
+    padding: 30px; /* More padding */
+    max-width: 800px; /* Width limit */
+    margin: 40px auto; /* Centers with more vertical space */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+    animation: fadeIn 1.5s ease-in-out; /* Fades in */
+    color: #e0e0e0; /* Light text */
 }
-
 
 /* Help Page Title */
 #helpPage-title {
-    font-size: 2.6em; /* Large font size for emphasis */
-    font-weight: bold; /* Makes text bold */
+    font-size: 2.6em; /* Large font size */
+    font-weight: 700; /* Bold text */
     text-align: center; /* Centers the title */
-    color: #e67e22; /* Orange color for visibility */
-    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
-    margin: 10px 0; /* Spacing around the title */
-    font-family: 'Arial', sans-serif; /* Sets specific font */
-    letter-spacing: 1px; /* Adds spacing between letters */
+    color: #ff9f43; /* Warm orange */
+    text-shadow: 0 0 10px rgba(255, 159, 67, 0.5); /* Glow effect */
+    margin: 15px 0 25px; /* Spacing */
+    font-family: 'Cinzel', 'Arial', serif; /* Cinematic font */
+    letter-spacing: 2px; /* Letter spacing */
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b); /* Gradient */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* Help Text */
 #helpText {
     text-align: center;
     font-size: 1.1em;
-    color: #666;
-    margin-bottom: 20px;
+    color: #e0e0e0;
+    margin-bottom: 25px;
+    line-height: 1.7;
+    font-family: 'Lora', 'Georgia', serif;
 }
 
 /* FAQ Section */
 #faq-section {
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 /* FAQ Question Button */
 .faq-question {
     display: block;
     width: 100%;
-    background-color: #007bff;
-    color: white;
-    padding: 15px;
-    border: none;
+    background: rgba(40, 40, 60, 0.8);
+    color: #e0e0e0;
+    padding: 15px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     text-align: left;
     font-size: 1.1em;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
+    border-radius: 8px;
+    margin-top: 12px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    position: relative;
+    overflow: hidden;
+}
+
+.faq-question::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.7s ease;
 }
 
 .faq-question:hover {
-    background-color: #0056b3;
+    background: rgba(60, 60, 80, 0.9);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.faq-question:hover::before {
+    left: 100%;
 }
 
 /* FAQ Answer */
 .faq-answer {
-    padding: 15px;
-    background-color: #e9ecef;
-    border-left: 4px solid #007bff;
+    padding: 18px;
+    background: rgba(30, 30, 40, 0.6);
+    border-left: 4px solid #ff9f43;
     margin-top: 5px;
-    border-radius: 5px;
+    border-radius: 8px;
     display: none; /* Hidden by default */
     font-size: 1em;
-    color: #333;
+    color: #e0e0e0;
     text-align: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    line-height: 1.6;
 }
-
-/* "Return" Button */
-#choices {
-    text-align: center;
-    margin-top: 20px;
-}
-
 
 #chatbot {
-    background: linear-gradient(135deg, #f3f4f6, #ffffff);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    /*font-family: 'Arial', sans-serif;*/
+    background: rgba(20, 20, 30, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 600px;
+    margin: 30px auto;
 }
 
 #chat-window {
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
     height: 250px;
     overflow-y: auto;
-    margin-bottom: 15px;
-    background: #f9fafb;
+    margin-bottom: 20px;
+    background: rgba(30, 30, 40, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 #messages {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .message {
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 70%;
+    margin: 6px 0;
+    padding: 12px;
+    border-radius: 12px;
+    max-width: 75%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-out;
 }
 
 .user-message {
     align-self: flex-end;
     text-align: right;
-    color: #1d4ed8;
-    background: #e0f2fe;
-    border: 1px solid #bae6fd;
+    color: #1a1a2e;
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+    border: none;
 }
 
 .bot-message {
     align-self: flex-start;
     text-align: left;
-    color: #047857;
-    background: #d1fae5;
-    border: 1px solid #bbf7d0;
+    color: #e0e0e0;
+    background: rgba(40, 40, 60, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .inputTextContainer {
-    display: flex; /* Flexbox ensures both elements are on the same line */
-    align-items: center; /* Vertically aligns the elements */
-    gap: 10px; /* Space between the text box and the button */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 15px;
 }
 
 #user-input {
-    flex: 1; /* Allows the text box to take up the remaining space */
-    /*width: calc(100% - 80px);*/
-    padding: 10px;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
+    flex: 1;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
     font-size: 16px;
+    background: rgba(30, 30, 40, 0.6);
+    color: #e0e0e0;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+#user-input:focus {
+    outline: none;
+    border-color: rgba(255, 159, 67, 0.6);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2), 0 0 8px rgba(255, 159, 67, 0.4);
 }
 
 #send-btn {
-    padding: 10px 20px;
-    background: #4CAF50;
-    color: white;
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+    color: #1a1a2e;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 159, 67, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+#send-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.7s ease;
 }
 
 #send-btn:hover {
-    background: #45a049;
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(255, 159, 67, 0.5);
+}
+
+#send-btn:hover::before {
+    left: 100%;
 }
 
 #send-btn:active {
-    background: #3e8e41;
+    transform: translateY(1px);
+    box-shadow: 0 3px 10px rgba(255, 159, 67, 0.3);
 }
 
 .report-container {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    padding: 20px;
+    background: rgba(20, 20, 30, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 25px;
     max-width: 600px;
     width: 100%;
-    margin: 15px;
+    margin: 25px auto;
+    animation: fadeIn 1s ease-out;
 }
 
 h1 {
-    font-size: 24px;
-    color: #0984e3;
+    font-size: 26px;
+    font-weight: 700;
+    color: #ff9f43;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px rgba(255, 159, 67, 0.5);
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
 }
 
 ul.report-list {
     list-style-type: none;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 ul.report-list li {
-    background: #dfe6e9;
-    margin-bottom: 5px; /* Reduced space between each box */
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    font-size: 14px;
-    transition: transform 0.3s, background-color 0.3s;
+    background: rgba(40, 40, 60, 0.6);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-size: 15px;
+    transition: all 0.3s ease;
     cursor: pointer;
+    color: #e0e0e0;
+    border-left: 3px solid #ff9f43;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 ul.report-list li:hover {
-    background-color: #74b9ff;
+    background: rgba(60, 60, 80, 0.7);
     color: #ffffff;
-    transform: scale(1.02);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 159, 67, 0.4);
+    border-left: 3px solid #ff6b6b;
 }
 
 pre {
-    font-size: 14px;
-    color: #2c3e50;
+    font-size: 15px;
+    color: #e0e0e0;
     margin: 0;
     white-space: pre-wrap;
     word-wrap: break-word;
+    font-family: 'Fira Code', monospace;
 }
 
 footer {
     text-align: center;
-    font-size: 11px;
-    color: #636e72;
-    margin-top: 13px;
+    font-size: 12px;
+    color: rgba(224, 224, 224, 0.6);
+    margin-top: 20px;
+    padding: 10px;
+    background: rgba(20, 20, 30, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 footer a {
-    color: #0984e3;
+    color: #ff9f43;
     text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 footer a:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: #ff6b6b;
+    text-shadow: 0 0 8px rgba(255, 107, 107, 0.6);
 }
 
 

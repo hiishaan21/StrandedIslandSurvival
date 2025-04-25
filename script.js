@@ -170,39 +170,77 @@ function choose(option) {
 function createEnergyPoints() {
     // Create the energy points element
     const energyPoints = document.createElement('p');
-    energyPoints.style.position = 'fixed'; // Fixed position to keep it in the viewport
-    energyPoints.style.top = '40px'; // Position from the top
-    energyPoints.style.right = '380px'; // Position from the right
+    energyPoints.style.position = 'absolute'; // Position absolutely within story-container
+    energyPoints.style.top = '15px'; // Align with other buttons
+    energyPoints.style.right = '75px'; // Position to the left of energy image
     energyPoints.style.fontSize = '18px'; // Font size
     energyPoints.style.fontWeight = 'bold'; // Make the text bold
-    energyPoints.style.position = 'absolute';
-    energyPoints.style.backgroundColor = '#f39c12'; // Background color for emphasis
-    energyPoints.style.color = '#ffffff'; // Text color
-    energyPoints.style.padding = '8px 12px'; // Padding around the text
-    energyPoints.style.borderRadius = '8px'; // Rounded corners
-    energyPoints.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
-    energyPoints.innerText = "100";
-    energyPoints.style.position = 'absolute';
-    energyPoints.style.display = 'none';
-    document.body.appendChild(energyPoints);
+    energyPoints.style.backgroundColor = 'rgba(255, 159, 67, 0.8)'; // Semi-transparent orange background
+    energyPoints.style.color = '#ffffff'; // White text color for contrast
+    energyPoints.style.padding = '12px 15px'; // Padding around the text
+    energyPoints.style.borderRadius = '12px'; // Rounded corners
+    energyPoints.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)'; // Match other buttons' shadow
+    energyPoints.style.zIndex = '100'; // Ensure it's above other elements
+    energyPoints.style.border = 'none'; // No border
+    energyPoints.style.margin = '0'; // No margin
+    energyPoints.style.transition = 'transform 0.3s, box-shadow 0.3s'; // Smooth transition
+    energyPoints.innerText = "100"; // Default energy value
+    energyPoints.style.display = 'none'; // Hidden initially
+    
+    // Add hover effects to match other elements
+    energyPoints.addEventListener('mouseover', () => {
+        energyPoints.style.transform = 'scale(1.05)';
+        energyPoints.style.boxShadow = '0 6px 20px rgba(255, 159, 67, 0.4)';
+    });
+    
+    energyPoints.addEventListener('mouseout', () => {
+        energyPoints.style.transform = 'scale(1)';
+        energyPoints.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    });
+    
+    // Get the story-container and append the energy points to it
+    const storyContainer = document.getElementById('story-container');
+    storyContainer.appendChild(energyPoints);
+    
     return energyPoints;
 }
 
 function createEnergyImage(){
     const energyImg = document.createElement('img');
     energyImg.src = 'images/energy.jpeg'; // source of image
-    energyImg.style.width = '70px'; // Set the width of the image
-    energyImg.style.height = '70px'; // Set the height of the image
+    energyImg.style.width = '50px'; // Set the width of the image
+    energyImg.style.height = '50px'; // Set the height of the image
     energyImg.style.borderRadius = '50%'; // Make the image circular
-    energyImg.style.position = 'fixed'; // Use fixed positioning
-    energyImg.style.position = 'absolute'; // Ensures Image doesn't move
-    energyImg.style.top = '20px'; // Set the top position (adjust as needed)
-    energyImg.style.right = '20px'; // Set the right position (adjust as needed)
+    energyImg.style.position = 'absolute'; // Position absolutely within story-container
+    energyImg.style.top = '15px'; // Distance from top of story-container
+    energyImg.style.margin = '0'; // No margin
+    energyImg.style.right = '15px'; // Position in top right corner
     energyImg.style.objectFit = 'cover'; // Ensures the image covers the circular area
-    energyImg.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)'; // adding shadow    
-    energyImg.style.left = '350px';
-    energyImg.style.display = 'none' // Hide initially
-    document.body.appendChild(energyImg);
+    energyImg.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)'; // Match other buttons' shadow
+    energyImg.style.border = 'none'; // No border
+    energyImg.style.padding = '0'; // No padding
+    energyImg.style.overflow = 'hidden'; // Ensure image doesn't overflow
+    energyImg.style.zIndex = '100'; // Ensure it's above other elements
+    energyImg.style.display = 'none'; // Hide initially
+    energyImg.style.transition = 'transform 0.3s, box-shadow 0.3s'; // Smooth transition
+    energyImg.style.backgroundImage = 'url(images/energy.jpeg)'; // Set the background image
+    energyImg.style.backgroundSize = 'cover'; // Cover the button area with the image
+    
+    // Add hover effects to match other buttons
+    energyImg.addEventListener('mouseover', () => {
+        energyImg.style.transform = 'scale(1.1)';
+        energyImg.style.boxShadow = '0 6px 20px rgba(255, 159, 67, 0.4)';
+    });
+    
+    energyImg.addEventListener('mouseout', () => {
+        energyImg.style.transform = 'scale(1)';
+        energyImg.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    });
+    
+    // Get the story-container and append the energy image to it
+    const storyContainer = document.getElementById('story-container');
+    storyContainer.appendChild(energyImg);
+    
     return energyImg;
 }
 
@@ -348,7 +386,7 @@ function creatingForgottenFalls() {
     forgottenFallsImg.src = 'images/forgottenfalls.jpeg';
     // Position the image absolutely within the viewport
     forgottenFallsImg.style.position = 'absolute'; // Use absolute positioning for precise control
-    forgottenFallsImg.style.right = '28%';         // Position it closer to the center horizontally from the right
+    forgottenFallsImg.style.right = '28%';         // Position closer to the center horizontally from the right
     forgottenFallsImg.style.top = '30%';           // Position it 30% from the top for a higher placement
     // Set the image dimensions
     forgottenFallsImg.style.width = '10%';         // Scale down the image to be smaller
@@ -455,33 +493,45 @@ function creatingFallsButton() {
 function creatingStopButton(){
     // Create a button element
     const stopButton = document.createElement('button');
-    stopButton.style.width = '70px';
-    stopButton.style.height = '70px';
+    stopButton.style.width = '50px';
+    stopButton.style.height = '50px';
     stopButton.style.position = 'absolute';
     stopButton.style.top = '15px';
-    stopButton.style.left = '320px'; // Position the button to the right
-    stopButton.style.border = 'none'; // Remove default button border
-    stopButton.style.padding = '0'; // Remove padding
-    stopButton.style.margin = '0'; // Remove margin
-    stopButton.style.backgroundColor = 'transparent'; // Ensure background is transparent
+    stopButton.style.left = '135px'; // Positioned third from left
+    stopButton.style.border = 'none';
+    stopButton.style.padding = '0';
+    stopButton.style.margin = '0';
+    stopButton.style.backgroundColor = 'transparent';
     stopButton.style.cursor = 'pointer';
-    stopButton.style.display = 'flex'; // Center image within button
     stopButton.style.display = 'none'; // Hide Initially
-    // Create an image element for the stop sign
-    const stopImage = document.createElement('img');
-    stopImage.src = 'images/stop.jpeg'; // Ensure the path to the stop sign image is correct
-    stopImage.alt = 'Stop Sign';
-    stopImage.style.width = '100%'; // Image fills the button's width
-    stopImage.style.height = '100%'; // Image fills the button's height
-    stopImage.style.objectFit = 'cover'; // Ensure the image covers the square area
-    // Append the image to the button
-    stopButton.appendChild(stopImage);
+    stopButton.style.zIndex = '100'; // Ensure it's above other elements
+    stopButton.style.borderRadius = '50%';
+    stopButton.style.transition = 'transform 0.3s, box-shadow 0.3s';
+    stopButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    stopButton.style.overflow = 'hidden'; // Ensure image doesn't overflow
+    stopButton.style.backgroundImage = 'url(images/stop.jpeg)'; // Set the background image
+    stopButton.style.backgroundSize = 'cover'; // Cover the button area with the image
+    
+    // Add hover effects
+    stopButton.addEventListener('mouseover', () => {
+        stopButton.style.transform = 'scale(1.1)';
+        stopButton.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.4)';
+    });
+    
+    stopButton.addEventListener('mouseout', () => {
+        stopButton.style.transform = 'scale(1)';
+        stopButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    });
+    
     // Add a click event listener to go back to the specified HTML page
     stopButton.addEventListener('click', () => {
         restartGame(); // Reload the webapp
     });
-    // Append the button to the body
-    document.body.appendChild(stopButton);
+    
+    // Get the story-container and append the button to it
+    const storyContainer = document.getElementById('story-container');
+    storyContainer.appendChild(stopButton);
+    
     // Return the button element in case you need to manipulate it further
     return stopButton;
 }
@@ -490,31 +540,43 @@ function creatingStopButton(){
 function creatingMicrophoneButton(){
     // Create a button element
     const microPhoneButton = document.createElement('button');
-    microPhoneButton.style.width = '70px';
-    microPhoneButton.style.height = '70px';
+    microPhoneButton.style.width = '50px';
+    microPhoneButton.style.height = '50px';
     microPhoneButton.style.position = 'absolute';
     microPhoneButton.style.top = '15px';
-    microPhoneButton.style.left = '400px'; // Position the button to the right
-    microPhoneButton.style.border = 'none'; // Remove default button border
-    microPhoneButton.style.padding = '0'; // Remove padding
-    microPhoneButton.style.margin = '0'; // Remove margin
-    microPhoneButton.style.backgroundColor = 'transparent'; // Ensure background is transparent
+    microPhoneButton.style.left = '15px'; // Positioned first from left
+    microPhoneButton.style.border = 'none';
+    microPhoneButton.style.padding = '0';
+    microPhoneButton.style.margin = '0';
+    microPhoneButton.style.backgroundColor = 'transparent';
     microPhoneButton.style.cursor = 'pointer';
-    microPhoneButton.style.display = 'flex'; // Center image within button
     microPhoneButton.style.display = 'none'; // Hide Initially
-    // Create an image element for the stop sign
-    const microphoneOnImage = document.createElement('img');
-    microphoneOnImage.src = 'images/mic.webp'; // Ensure the path to the stop sign image is correct
-    microphoneOnImage.alt = 'Microphone';
-    microphoneOnImage.style.width = '100%'; // Image fills the button's width
-    microphoneOnImage.style.height = '100%'; // Image fills the button's height
-    microphoneOnImage.style.objectFit = 'cover'; // Ensure the image covers the square area
-    // Append the image to the button
-    microPhoneButton.appendChild(microphoneOnImage);
-    // Add a click event listener to start voice recognition;
+    microPhoneButton.style.zIndex = '100'; // Ensure it's above other elements
+    microPhoneButton.style.borderRadius = '50%';
+    microPhoneButton.style.transition = 'transform 0.3s, box-shadow 0.3s';
+    microPhoneButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    microPhoneButton.style.overflow = 'hidden'; // Ensure image doesn't overflow
+    microPhoneButton.style.backgroundImage = 'url(images/mic.webp)'; // Set the background image
+    microPhoneButton.style.backgroundSize = 'cover'; // Cover the button area with the image
+    
+    // Add hover effects
+    microPhoneButton.addEventListener('mouseover', () => {
+        microPhoneButton.style.transform = 'scale(1.1)';
+        microPhoneButton.style.boxShadow = '0 6px 20px rgba(255, 159, 67, 0.4)';
+    });
+    
+    microPhoneButton.addEventListener('mouseout', () => {
+        microPhoneButton.style.transform = 'scale(1)';
+        microPhoneButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    });
+    
+    // Add a click event listener to start voice recognition
     microPhoneButton.addEventListener('click', setupSpeechRecognition);
-    // Append the button to the body
-    document.body.appendChild(microPhoneButton);
+    
+    // Get the story-container and append the button to it
+    const storyContainer = document.getElementById('story-container');
+    storyContainer.appendChild(microPhoneButton);
+    
     // Return the button element in case you need to manipulate it further
     return microPhoneButton;
 }
@@ -522,33 +584,45 @@ function creatingMicrophoneButton(){
 function creatingExportButton(){
     // Create a button element
     const exportButton = document.createElement('button');
-    exportButton.style.width = '70px'; // Set Width
-    exportButton.style.height = '70px'; // Set Height
-    exportButton.style.position = 'absolute'; // Fixed position for the top-right corner
-    exportButton.style.top = '15px'; // Top height
-    exportButton.style.right = '330px'; // Position the button on the right
-    exportButton.style.border = 'none'; // Remove default button border
-    exportButton.style.padding = '0'; // Remove padding
-    exportButton.style.margin = '0'; // Remove margin
-    exportButton.style.backgroundColor = 'transparent'; // Ensure background is transparent
-    exportButton.style.cursor = 'pointer'; // Highlight when pointed
-    exportButton.style.display = 'flex'; // Center image within button
+    exportButton.style.width = '50px';
+    exportButton.style.height = '50px';
+    exportButton.style.position = 'absolute';
+    exportButton.style.top = '15px';
+    exportButton.style.right = '75px'; // Position to the left of stop button
+    exportButton.style.border = 'none';
+    exportButton.style.padding = '0';
+    exportButton.style.margin = '0';
+    exportButton.style.backgroundColor = 'transparent';
+    exportButton.style.cursor = 'pointer';
     exportButton.style.display = 'none'; // Hide Initially
-    // Create an image element for the stop sign
-    const exportImage = document.createElement('img');
-    exportImage.src = 'images/exportfinal.webp'; // Ensure the path to the export sign image is correct
-    exportImage.style.width = '100%'; // Image fills the button's width
-    exportImage.style.height = '100%'; // Image fills the button's height
-    exportImage.style.objectFit = 'cover'; // Ensure the image covers the square area
-    // Append the image to the button
-    exportButton.appendChild(exportImage);
-    //JSON.stringify(reportData)
+    exportButton.style.zIndex = '100'; // Ensure it's above other elements
+    exportButton.style.borderRadius = '50%';
+    exportButton.style.transition = 'transform 0.3s, box-shadow 0.3s';
+    exportButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    exportButton.style.overflow = 'hidden'; // Ensure image doesn't overflow
+    exportButton.style.backgroundImage = 'url(images/export.jpeg)'; // Set the background image
+    exportButton.style.backgroundSize = 'cover'; // Cover the button area with the image
+    
+    // Add hover effects
+    exportButton.addEventListener('mouseover', () => {
+        exportButton.style.transform = 'scale(1.1)';
+        exportButton.style.boxShadow = '0 6px 20px rgba(255, 159, 67, 0.4)';
+    });
+    
+    exportButton.addEventListener('mouseout', () => {
+        exportButton.style.transform = 'scale(1)';
+        exportButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    });
+    
+    // Add a click event listener to export the data
     exportButton.addEventListener('click', () => {
         exportToExcel(reportData, "ReportStats.xlsx");
     });
-
-    // Append the button to the body
-    document.body.appendChild(exportButton);
+    
+    // Get the story-container and append the button to it
+    const storyContainer = document.getElementById('story-container');
+    storyContainer.appendChild(exportButton);
+    
     // Return the button element in case you need to manipulate it further
     return exportButton;
 }
@@ -557,30 +631,43 @@ function creatingExportButton(){
 function creatingHelpButton(){
     // Create a button element
     const helpButton = document.createElement('button');
-    helpButton.style.width = '44px'; // Set Width
-    helpButton.style.height = '44px'; // Set Height
-    helpButton.style.position = 'relative'; // Fixed position for the top-right corner
-    helpButton.style.bottom = '92px'; // Bottom height
-    helpButton.style.left = '292px'; // Position the button on the right
-    helpButton.style.border = 'none'; // Remove default button border
-    helpButton.style.padding = '0'; // Remove padding
-    helpButton.style.margin = '0'; // Remove margin
-    helpButton.style.backgroundColor = 'transparent'; // Ensure background is transparent
-    helpButton.style.cursor = 'pointer'; // Highlight when pointed
-    helpButton.style.display = 'flex'; // Center image within button
+    helpButton.style.width = '50px';
+    helpButton.style.height = '50px';
+    helpButton.style.position = 'absolute';
+    helpButton.style.top = '15px';
+    helpButton.style.left = '75px'; // Positioned second from left
+    helpButton.style.border = 'none';
+    helpButton.style.padding = '0';
+    helpButton.style.margin = '0';
+    helpButton.style.backgroundColor = 'transparent';
+    helpButton.style.cursor = 'pointer';
     helpButton.style.display = 'none'; // Hide Initially
-    // Create an image element for the stop sign
-    const helpImage = document.createElement('img');
-    helpImage.src = 'images/question.jpeg'; // Ensure the path to the question sign image is correct
-    helpImage.style.width = '100%'; // Image fills the button's width
-    helpImage.style.height = '100%'; // Image fills the button's height
-    helpImage.style.objectFit = 'cover'; // Ensure the image covers the square area
-    // Append the image to the button
-    helpButton.appendChild(helpImage);
-    // Add a click event listener to go to the specified HTML page
+    helpButton.style.zIndex = '100'; // Ensure it's above other elements
+    helpButton.style.borderRadius = '50%';
+    helpButton.style.transition = 'transform 0.3s, box-shadow 0.3s';
+    helpButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    helpButton.style.overflow = 'hidden'; // Ensure image doesn't overflow
+    helpButton.style.backgroundImage = 'url(images/question.jpeg)'; // Set the background image
+    helpButton.style.backgroundSize = 'cover'; // Cover the button area with the image
+    
+    // Add hover effects
+    helpButton.addEventListener('mouseover', () => {
+        helpButton.style.transform = 'scale(1.1)';
+        helpButton.style.boxShadow = '0 6px 20px rgba(255, 159, 67, 0.4)';
+    });
+    
+    helpButton.addEventListener('mouseout', () => {
+        helpButton.style.transform = 'scale(1)';
+        helpButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+    });
+    
+    // Add a click event listener to show help page
     helpButton.addEventListener('click', helpButtonClick);
-    // Append the button to the body
-    document.body.appendChild(helpButton);
+    
+    // Get the story-container and append the button to it
+    const storyContainer = document.getElementById('story-container');
+    storyContainer.appendChild(helpButton);
+    
     // Return the button element in case you need to manipulate it further
     return helpButton;
 }
@@ -916,7 +1003,7 @@ function setupEveningPage(){
     ghostLightCaveImage.style.display = 'none';
     // Change title of the page
     storyTitle.innerText = 'Evening #1'
-    storyText.style.color = "black";
+    storyText.style.color = "white";
     // Create a list of different types of shelters
     storyText.innerHTML = `
     <p>After reaching your campsite you decide to make camp. You can make 3 types of shelters: Small, Medium, and Large
