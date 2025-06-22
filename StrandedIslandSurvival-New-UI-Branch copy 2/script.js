@@ -255,7 +255,8 @@ function choose(option) {
         case 'buildFire':
             setupBuildFirePage();
             updateProgress(50);
-            energyBar.style.paddingBottom = energyAfterFire*4+16+"px";
+            energyBar.style.height = energyAfterFire*4+36+"px";
+            energyBar.style.top = 236-(energyAfterFire*4+36)+250+"px";
             break;
         // If user clicks Small Shelter
         case 'smallShelter':
@@ -276,13 +277,15 @@ function choose(option) {
         case 'nextDay':
             setupNextDayPage();
             updateProgress(70);
-            energyBar.style.paddingBottom = randomNum4*4+16+"px";
+            energyBar.style.height = randomNum4*4+36+"px";
+            energyBar.style.top = 236-(randomNum4*4+36)+250+"px";
             break;
         // If user wants to wave to get ship's attention
         case 'shipAttention':
             setupShipAttentionPage();
             updateProgress(80);
-            energyBar.style.paddingBottom = "16px";
+            energyBar.style.height = "36px";
+            energyBar.style.top = "450px";
             break;
         // If user has to option to retry:
         case 'reTry':
@@ -295,7 +298,8 @@ function choose(option) {
         case 'helpOnSand':
             setupSuccessPage();
             updateProgress(100);
-            energyBar.style.paddingBottom = "16px";
+            energyBar.style.height = "36px";
+            energyBar.style.top = "450px";
             break;
         // If user clicks home to restart game
         case 'report':
@@ -560,7 +564,8 @@ function handleLocationSelect(location) {
     // Update energy
     let currentEnergy = count === 1 ? reportVariables.energyAfterLocation1 : reportVariables.energyAfterLocation2;
     energyValue.textContent = currentEnergy;
-    energyBar.style.paddingBottom = currentEnergy*4+16+"px";
+    energyBar.style.height = currentEnergy * 4 + 36+"px";
+    energyBar.style.top = 236-(currentEnergy * 4 + 36)+250+"px";
     //updateEnergyBar(currentEnergy);
 
     // Toast messages
@@ -699,7 +704,8 @@ function setupShelter(shelterImageSrc, shelterType) {
     // Play a different sound
     playSound(levelUpSound5);
 
-    energyBar.style.paddingBottom = "16px";
+    energyBar.style.height = "36px";
+    energyBar.style.top = "450px";
 
     // Update the fire animation GIF dynamically
     const fireOverlay = document.getElementById('fire-overlay');

@@ -730,16 +730,14 @@ footer a:hover {
     top: 250px;               /* higher on the screen */
     left: 90px;               /* moved a little bit more right */
     display: flex;
-    height: 20px;
+    height: 236px; /* 36 - 236 */
+    width: 36px;
     align-items: center;
     background: var(--primary-color );
-    padding-left: 18px;
-    padding-right: 18px;
-    padding-bottom: 216px;
     border-radius: 70px;       /* more rounded edges */
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     z-index: 101;
-    transition: background-color 0.3s ease, transform 0.2s ease, padding-bottom 1s;
+    transition: background-color 0.3s ease, transform 0.2s ease, padding-top 1s;
 }
 
 #energy-bar-holder {
